@@ -813,4 +813,180 @@ for i in range(100):
 t.pensize(5)
 t.color('black')
 t.circle(100)
+#===================================
+#如果柱状图报错，就用这个
+import matplotlib
+matplotlib.use('TkAgg')  # 或者 'Qt5Agg'
+import matplotlib.pyplot as plt
+import numpy as np
+
+# 生成随机数据
+var = np.random.randint(1, 10, 10)
+
+# 绘制柱状图
+plt.bar(range(len(var)), var)
+
+# 显示图表
+plt.show()
+# ==================================
+# 没有输出看看这个
+def fire(n, c=1):
+    # 参数类型校验
+    if not isinstance(n, int) or not isinstance(c, int):
+        raise TypeError("参数必须是整数")
+
+    # 参数范围校验
+    if n < 1 or c < 1 or c > n:
+        raise ValueError("参数范围无效：n需≥1且1≤c≤n")
+
+    # 修正金字塔方向
+    for current in range(c, n + 1):
+        spaces = ' ' * (n - current)  # 修正空格计算逻辑
+        stars = '*' * (2 * current - 1)  # 修正星号计算逻辑
+        print(spaces + stars)
+
+
+fire(5)
+# ==================================
+#可玩版本，到底哪里错了！
+import pygame
+
+# 初始化配置
+pygame.init()
+screen = pygame.display.set_mode((400, 200))
+clock = pygame.time.Clock()
+
+# 创建矩形（修正类名和变量名）
+square_pos = pygame.Rect(175, 75, 50, 50)  # 居中初始位置
+
+running = True
+while running:
+    # 正确处理事件队列
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+
+    # 获取按键状态
+    keys = pygame.key.get_pressed()
+    move_speed = 20  # 统一速度变量
+
+    # 处理移动（带边界检测）
+    new_x = square_pos.x
+    new_y = square_pos.y
+
+    if keys[pygame.K_UP]:
+        new_y = max(0, square_pos.y - move_speed)
+    if keys[pygame.K_DOWN]:
+        new_y = min(screen.get_height() - 50, square_pos.y + move_speed)
+    if keys[pygame.K_LEFT]:
+        new_x = max(0, square_pos.x - move_speed)
+    if keys[pygame.K_RIGHT]:
+        new_x = min(screen.get_width() - 50, square_pos.x + move_speed)
+
+    square_pos.topleft = (new_x, new_y)
+
+    # 渲染逻辑
+    screen.fill("black")
+    pygame.draw.rect(screen, "red", square_pos)
+    pygame.display.flip()
+    clock.tick(60)
+
+pygame.quit()
+# =================================
+#有小球版本
+import pygame
+
+# 常量配置
+SCREEN_WIDTH = 400
+SCREEN_HEIGHT = 200
+SQUARE_SIZE = 50
+MOVE_STEP = 20
+
+# 圆形物理参数
+CIRCLE_RADIUS = 20
+GRAVITY = 0.5
+DAMPING = 0.85  # 能量衰减系数
+BOUNCE_STRENGTH = 0.8  # 碰撞反弹强度
+MAX_Y_SPEED = 15  # 防止速度过大穿透地面
+
+pygame.init()
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+clock = pygame.time.Clock()
+
+# 矩形初始化
+square_pos = pygame.Rect(
+    (SCREEN_WIDTH - SQUARE_SIZE) // 2,
+    (SCREEN_HEIGHT - SQUARE_SIZE) // 2,
+    SQUARE_SIZE,
+    SQUARE_SIZE,
+)
+
+# 圆形物理系统初始化
+circle_pos = pygame.Vector2(SCREEN_WIDTH // 2, 50)  # 从顶部开始下落
+circle_velocity = pygame.Vector2(3, 0)  # 初始水平速度
+
+while True:
+    # 事件处理
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            exit()
+
+    # 输入处理
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_UP]:
+        square_pos.y = max(0, square_pos.y - MOVE_STEP)
+    if keys[pygame.K_DOWN]:
+        square_pos.y = min(SCREEN_HEIGHT - SQUARE_SIZE, square_pos.y + MOVE_STEP)
+    if keys[pygame.K_LEFT]:
+        square_pos.x = max(0, square_pos.x - MOVE_STEP)
+    if keys[pygame.K_RIGHT]:
+        square_pos.x = min(SCREEN_WIDTH - SQUARE_SIZE, square_pos.x + MOVE_STEP)
+
+    # 圆形物理模拟
+    # 应用重力
+    circle_velocity.y = min(circle_velocity.y + GRAVITY, MAX_Y_SPEED)
+
+    # 更新位置
+    new_pos = circle_pos + circle_velocity
+
+    # 边界碰撞检测
+    # 底部碰撞
+    if new_pos.y > SCREEN_HEIGHT - CIRCLE_RADIUS:
+        new_pos.y = SCREEN_HEIGHT - CIRCLE_RADIUS
+        circle_velocity.y *= -BOUNCE_STRENGTH
+        circle_velocity.x *= DAMPING  # 水平方向能量衰减
+
+    # 顶部碰撞
+    if new_pos.y < CIRCLE_RADIUS:
+        new_pos.y = CIRCLE_RADIUS
+        circle_velocity.y *= -BOUNCE_STRENGTH
+
+    # 右侧碰撞
+    if new_pos.x > SCREEN_WIDTH - CIRCLE_RADIUS:
+        new_pos.x = SCREEN_WIDTH - CIRCLE_RADIUS
+        circle_velocity.x *= -BOUNCE_STRENGTH
+
+    # 左侧碰撞
+    if new_pos.x < CIRCLE_RADIUS:
+        new_pos.x = CIRCLE_RADIUS
+        circle_velocity.x *= -BOUNCE_STRENGTH
+
+    # 应用最终位置
+    circle_pos = new_pos
+
+    # 能量衰减（防止无限弹跳）
+    if abs(circle_velocity.x) < 0.1:
+        circle_velocity.x = 0
+    if abs(circle_velocity.y) < 0.1:
+        circle_velocity.y = 0
+
+    # 渲染
+    screen.fill("black")
+    pygame.draw.rect(screen, "red", square_pos)
+    pygame.draw.circle(screen, "blue", circle_pos, CIRCLE_RADIUS)
+    pygame.display.flip()
+    clock.tick(60)
+
+
 
