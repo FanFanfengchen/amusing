@@ -723,10 +723,11 @@ pen.hideturtle()
 turtle.done()#阻塞程序并保持窗口打开，直到用户手动关闭
 turtle.mainloop()
 # ===============================================================
+# from turtle import*#可以不用导入，直接用turtle
 import turtle as t
 import time as ti
-t.speed(0)    # 设置最快速度
-'''t.tracer(0)   # 关闭自动刷新
+'''t.speed(0)    # 设置最快速度
+t.tracer(0)   # 关闭自动刷新
 # ==================================
 #四个圆
 a = 1
@@ -807,12 +808,93 @@ t.done()
 t.color('blue')
 for i in range(100):
     t.circle(i)
-    t.right(78)'''
+    t.right(78)
 # ==================================
 #奥运五环
-t.pensize(5)
+t.pensize(9)
+
 t.color('black')
+t.circle(75)
+
+t.penup()
+t.goto(-180,0)
+t.pendown()
+t.color('blue')
+t.circle(75)
+
+t.penup()
+t.goto(180,0)
+t.pendown()
+t.color('red')
+t.circle(75)
+
+t.penup()
+t.goto(90,-75)
+t.pendown()
+t.color('green')
+t.circle(75)
+
+t.penup()
+t.goto(-90,-75)
+t.pendown()
+t.color('yellow')
+t.circle(75)
+
+t.color('black')
+t.penup()
+t.goto(-100,180)
+t.pendown()
+t.write('北京 2020',font=('kaiti',32))
+t.hideturtle()'''
+# ==================================
+#美国盾牌
+t.penup()
+t.goto(0,-200)
+t.pendown()
+t.color('red')
+t.begin_fill()
+t.circle(200)
+t.end_fill()
+
+t.penup()
+t.goto(0,-150)
+t.pendown()
+t.color('white')
+t.begin_fill()
+t.circle(150)
+t.end_fill()
+
+t.penup()
+t.goto(0,-100)
+t.pendown()
+t.color('red')
+t.begin_fill()
 t.circle(100)
+t.end_fill()
+
+t.penup()
+t.goto(0,-50)
+t.pendown()
+t.color('blue')
+t.begin_fill()
+t.circle(50)
+t.end_fill()
+
+t.penup()
+t.goto(-40,10)
+t.pendown()
+
+t.color('white')
+
+t.begin_fill()
+
+for i in range(5):
+    t.forward(80)
+    t.right(144)
+
+t.end_fill()
+
+t.hideturtle()
 #===================================
 #如果柱状图报错，就用这个
 import matplotlib
