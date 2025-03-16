@@ -724,6 +724,7 @@ turtle.done()#阻塞程序并保持窗口打开，直到用户手动关闭
 turtle.mainloop()
 # ===============================================================
 # from turtle import*#可以不用导入，直接用turtle
+import turtle
 import turtle as t
 import time as ti
 '''t.speed(0)    # 设置最快速度
@@ -845,7 +846,7 @@ t.penup()
 t.goto(-100,180)
 t.pendown()
 t.write('北京 2020',font=('kaiti',32))
-t.hideturtle()'''
+t.hideturtle()
 # ==================================
 #美国盾牌
 t.penup()
@@ -895,6 +896,73 @@ for i in range(5):
 t.end_fill()
 
 t.hideturtle()
+# =================================
+#彩球飘飘
+
+#随机数
+import random
+
+t.colormode(255)
+t.speed(0)
+
+for i in range(20):
+    red = random.randint(0,255)#在这里调颜色
+    green = red = random.randint(0,255)
+    blue = red = random.randint(0,255)
+
+    x = random.randint(-220,220)
+    y = random.randint(-100,220)
+
+    t.penup()
+    t.goto(x,y)
+    t.pendown()
+
+    t.color(red,green,blue)
+
+    t.begin_fill()
+    t.circle(30)
+    t.end_fill()
+
+    t.right(90)
+    t.forward(30)
+    t.left(90)
+t.done()
+#RGB red green blue'''
+#==================================
+#繁星满天
+t.bgcolor('black')
+
+t.speed(0)
+t.colormode(255)
+
+t.pensize(250)
+for i in range(10):
+    t.goto(-500,300-i*100)
+    t.color(i*20,i*20,i*20)
+    t.forward(1000)
+
+for x in range(8):
+    if x%2==0:
+        t.left(30)
+    else:
+        t.right(120)
+    t.forward(50)
+
+def drawStar():
+    t.begin_fill()
+    for i in range(5):
+        t.forward(50)
+        t.left(30)
+        t.forward(50)
+        t.right(120)
+    t.end_fill()
+
+t.pensize(5)
+t.penup()
+t.goto(150,150)
+t.pendown()
+t.color('yellow')
+drawStar()
 #===================================
 #如果柱状图报错，就用这个
 import matplotlib
