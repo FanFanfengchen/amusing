@@ -930,6 +930,7 @@ t.done()
 #RGB red green blue'''
 #==================================
 #繁星满天
+import random
 t.bgcolor('black')
 
 t.speed(0)
@@ -947,22 +948,29 @@ for x in range(8):
     else:
         t.right(120)
     t.forward(50)
+for i in range(20):
+    x = random.randint(-400,400)
+    y = random.randint(-100,350)
+    e = random.randint(1, 15)
+    def drawStar():
+        t.begin_fill()
+        for i in range(4):
+            t.forward(e)
+            t.left(30)
+            t.forward(e)
+            t.right(120)
+        t.end_fill()
 
-def drawStar():
-    t.begin_fill()
-    for i in range(5):
-        t.forward(50)
-        t.left(30)
-        t.forward(50)
-        t.right(120)
-    t.end_fill()
-
-t.pensize(5)
-t.penup()
-t.goto(150,150)
-t.pendown()
-t.color('yellow')
-drawStar()
+    t.pensize(5)
+    t.penup()
+    t.goto(x, y)
+    # t.goto(150,150)
+    t.pendown()
+    red = random.randint(180,255)
+    green = random.randint(180,255)
+    blue = 0
+    t.color(red, green, blue)
+    drawStar()
 #===================================
 #如果柱状图报错，就用这个
 import matplotlib
