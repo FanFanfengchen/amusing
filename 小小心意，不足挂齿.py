@@ -1,12 +1,12 @@
 a = 100
 b = 200
-print(a,b,'装逼，我让你飞起来')#这是一个简单的代码
+print(a, b, '装逼，我让你飞起来')#这是一个简单的代码
 # ================================================
 a = 50
 b = 100
 c = 200
-print(a*b/c)
-print(a+b)
+print(a * b / c)
+print(a + b)
 print("你好，晚上好")
 # ================================================
 print('b')
@@ -18,8 +18,8 @@ print(chr(56))
 print('[')
 print(chr(91))
 # ================================================
-print(ord('你'),ord('好'))
-print(chr(20320),chr(22909))
+print(ord('你'), ord('好'))
+print(chr(20320), chr(22909))
 # ================================================
 flag = False
 name = 'liunx'
@@ -92,14 +92,14 @@ print(age)#输出你的输入
 # ================================================
 x = 10
 y = 5
-s = x*y
+s = x * y
 print(s)
 # ================================================
 result = '我' + '和' + '你'
 print(result)#输出我和你
 # ================================================
 a,b,c = 1,2,'jojo'
-print(a,b,c)
+print(a, b, c)
 # ================================================
 str = '你好啊，外邦的旅客！'
 print(str)
@@ -111,7 +111,7 @@ print(str * 2)
 print(str + "end")
 print(str[:7])
 # ===============================================
-list = [ 'What can I say?', 786 , 2.23, 'jojo', 70.2]
+list = [ 'What can I say?', 786, 2.23, 'jojo', 70.2]
 tinylist = [123, 'jojo']
 print(list)
 print(list[0])
@@ -124,7 +124,7 @@ dict = {}
 dict['我来助你！'] = "广智救我！"
 dict['出门撞大运'] = "新年快乐！"
 
-tinydict = {'米饭仙人': '风灵月影','刚满18岁':114514,'我这一生如履薄冰':'菜就多练'}
+tinydict = {'米饭仙人': '风灵月影', '刚满18岁':114514,'我这一生如履薄冰':'菜就多练'}
 
 
 print(dict['我来助你！'])#字典中的键值对
@@ -296,7 +296,7 @@ print("beybey!")
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-for num in range(10, 20):  # 迭代 10 到 20 (不包含) 之间的数字
+for num in range(10, 20):  # 迭代 10 到 20 (不包含) 之间的数字,简单来说就是10~19
     for i in range(2, num):  # 根据因子迭代
         if num % i == 0:  # 确定第一个因子
             j = num / i  # 计算第二个因子
@@ -319,23 +319,25 @@ while (i < 100):
 
 print("Good bye!")
 # ==============================================
-apple = 'eat'
+apple = 'eat'  #吃苹果
 kill = 'eat'  # 修正了这里，将 kill 的值改为 'eat'
 I = 'you'
 kiss = 'you'
 
 # 检查条件是否满足
-if (apple == kill) and (I == kiss):
-    print('一袋米要抗几楼（感受痛苦吧），')
-    print('一袋米要抗二楼（思考痛苦吧），')
-    print('一袋米要给多了（接受痛苦吧），')
-    print('一袋米我洗嘞（理解痛苦吧），')
-    print('一袋米我洗了那么多泥（不了解痛楚的人），')
-    print('和那堆黑瓦，瓦坷垃（是无法了解真正的和平的）！')
-    print('颗颗有泥（从现在开始），')
-    print('谁给你一袋米呦（让世界感受痛苦），')
-    print('行了添水/辛辣天森/心累天塞（神罗天征）！')
-elif (apple == kill) and (I != kiss):
+if apple == kill and I == kiss:
+    print(
+        '''一袋米要抗几楼（感受痛苦吧），
+一袋米要抗二楼（思考痛苦吧），
+一袋米要给多了（接受痛苦吧），
+一袋米我洗嘞（理解痛苦吧），
+一袋米我洗了那么多泥（不了解痛楚的人），
+和那堆黑瓦，瓦坷垃（是无法了解真正的和平的）！
+颗颗有泥（从现在开始），
+谁给你一袋米呦（让世界感受痛苦），
+行了添水 / 辛辣天森 / 心累天塞（神罗天征）！'''
+    )
+elif apple == kiil and I != kiss:
     print('一袋米引发的战争')
 '''试了三次啊，三次，终于成功了'''
 # ========================================================
@@ -347,51 +349,51 @@ b = int(b)
 # print(type(a))
 print(a+b)
 # ================================
-money = int(input("交出你的money，哈哈哈: "))
+money = int(input("交出你的money，哈哈哈: "))#要钱
 if money >= 500:
-    print("太好啦，是钱，我们有救了！")
+    print("太好啦，是钱，我们有救了！")#太好了，是甲方
 else:
-    print("太好了，让我们进入米奇妙妙屋。")
+    print("太好了，让我们进入米奇妙妙屋。")#（勉强的笑容）
 if money >= 1000:
     if money > 1000 and money < 5000:
-        print('加油加油！')
+        print('加油加油！')#厉害了我的哥
     elif money ==1000:
-        print('有所懈怠了呀。')
+        print('有所懈怠了呀。')#基本满足
     if money == 1000:
-        print('刚刚好，是不是故意的？')
+        print('刚刚好，是不是故意的？')#黑暗森林，有着猜疑链
 if money >= 500 and money <= 1000:
     if money == 500:
-        print('回家吧，你也不希望在外面出丑吧？')
+        print('回家吧，你也不希望在外面出丑吧？')#可以吃饭
     if money == 1000:
-        print('不是故意的，就是有意的！')
+        print('不是故意的，就是有意的！')#自问自答
     if money > 500 and money < 1000:
-        print('你的想法真是让人捉摸不透啊！')
+        print('你的想法真是让人捉摸不透啊！')#呀呀呀呀
     else:
-        print('嘿，你瞅啥呢，我是你蝶！')
+        print('嘿，你瞅啥呢，我是你蝶！')#哎呀呀
 # ================================================
-a = int(input("来来来："))
+a = int(input("来来来（数字，不要提前回车）："))
 b = 0
-while b <= 100: #用while循环
+while b <= 100: #用while循环100次，哈哈哈
     print(a)
-    b = b + 1
-    a = a + b
+    b += 1
+    a += b
     print(b)
-    a = a - b
+    a -= b #还是徒劳吗？
     # break 用break直接结束循环
 # ====================================时间戳的运用示例
 import time
 
 # 获取当前时间戳（秒级时间戳）
 timestamp = time.time()
-print("当前时间戳（秒）:", timestamp)
+print("当前时间戳（秒）:", timestamp)#时间戳的英文
 
 # 获取当前时间戳（毫秒级时间戳）
 timestamp_ms = int(round(time.time() * 1000))
-print("当前时间戳（毫秒）:", timestamp_ms)
+print("当前时间戳（毫秒）:", timestamp_ms)#横杠加ms
 
 
 import time
-from datetime import datetime
+from datetime import datetime#运用了时间数据
 
 # 将秒级时间戳转换为日期时间
 timestamp = time.time()
@@ -440,7 +442,7 @@ print("时间差（秒）:", time_diff)
 from datetime import datetime, timedelta
 
 # 创建一个日期时间对象
-dt = datetime.now()
+dt = datetime.now()#现在
 print("当前日期时间:", dt)
 
 # 添加时间
@@ -588,12 +590,12 @@ for i in range(3,10): #3~9
     print(i)
 
 i = 1
-while i <= 10:
+while i <= 10:#成立
     print(i)
-    i = i + 2
+    i += 2#由i = i + 2
 
-for i in range(1,10,2):
-    print(i)
+for i in range(1,10,2):#1~9,跳过2
+    print(i)#就是只输出1 3 5 7 9
 
 x = 10
 if x > 5:
@@ -611,7 +613,7 @@ while True:
     time.sleep(1)  # 模拟操作耗时
 
     # 检查是否超时
-    if time.time() - start_time > timeout:
+    if time.time() - start_time > timeout:#用现在比较过去，你还会犹豫吗？
         print("已超时，停止循环")
         break
 
@@ -641,10 +643,10 @@ print("循环已结束")
 # 比如：
 a = 10
 b = 15
-print(a+b)
-print(a-b)
-print(a*b)
-print(a/b)
+print(a + b)
+print(a - b)
+print(a * b)
+print(a / b)
 if a < b:
     print('a < b')
 if a > b:
@@ -667,6 +669,93 @@ print(10/3) #它的输出的最后一位存在误差，说明关于无穷，计�
 #就像你与你命中注定的人的距离，处于小数时，距离是可以无限近和无限远的。但是，处于整数时，在一瞬间，你们两个的关系就明确了
 #计算机是一款二进制产品，语言基础就：0,1，人家本来就难，不要强迫别人，所以，计算机在表示一个小数时是会有误差的
 bool
+#===============================================================
+#蛊界的那些事
+import time
+血颅蛊 = '众人所望'
+方源 = '哭泣'
+if 血颅蛊 == '众人所望':
+    print('古月族长：')
+    print('''方源，你不要再妇人之仁了。
+快对我们使用血颅蛊，
+再晚就来不及了，
+你难道要看着我们古月一族，
+彻底消失吗？''')
+    time.sleep(1)
+if 方源 == '哭泣':
+    print('方源：')
+    print('''不，族长爷爷，
+我不能这样，
+我不能这样！
+我要陪你们一起战斗，我们还有希望的！''')
+    time.sleep(1)
+if 血颅蛊 == '众人所望' and 方源 == '哭泣':
+    print('古月族长：')
+    print('''没有机会了。
+吐血；
+古月方源，
+我以古月一族之长的身份命令你
+咳血*2；
+立刻使用血颅蛊，活下去...重振我古月一族
+否则，你再也不是我古月一族之人！''')
+    time.sleep(0.5)
+    print('方源爆发：')
+    print('''族长爷爷，族人们，
+你们放心，我一定会重振古月一族的辉煌，
+我会为你们报仇，还要从仙鹤门手中救出弟弟
+仙鹤门，我古月方源对天发誓，有朝一日，定让你们鸡犬不留...''')
+    time.sleep(1)
+蛊真人 = '方源诵诗'
+if 蛊真人 == '方源诵诗':
+    print('''落魄谷中寒风吹，春秋蝉鸣少年归。
+荡魂深处石人泪，定仙游走魔向北。
+逆流河上万仙退，爱情不敌坚持泪。
+宿命中成命中败，仙尊悔，而我不悔！''')
+    time.sleep(1)
+方源 = '历史，如果有用还要我有什么用！！！'
+if 方源 == '历史，如果有用还要我有什么用！！！':
+    print('10岁', '青梅竹马，献祭自己，为主角增长修为 三转',
+'\n15岁', '全族为了保住家族火种，强行为主角提升资质，甲等',
+'\n18岁', '为保护八十八角真阳楼，无奈放弃前途成仙，',
+'\n20岁', '被尊者作为蛊虫实验品，天妒',
+'\n25岁', '被双尊合力打杀，弥留之际，光阴长河中传来一句诛心之言',
+'\n你... 可曾有一丝后悔',
+'\n少年微笑' + ' 不过是些许风霜罢了' + ' 维护他人，无悔'
+'\n顷刻间，尊者，成', )
+print('为什么都说' + ' 白凝冰' + ' 实际上才是蛊真人笔下的第一女主呢？',
+'\n因为她说：',
+'\n这个蛊界好不公平',
+'我陪你从古月山寨一直走到了三王山，'
+'见证你以蛊师之身，'
+'练出了六转仙蛊，'
+'可是几年后出现的星宿仙尊，'
+'却轻易地夺走了那个最好的你，'
+'未来会更好的你'
+'爱情，真的要这么毫无道理吗？'
+'对于蛊界，你是冷酷残忍的炼天魔尊，'
+'但是对我来说，你就是那个只为造福世界，恢复五域和谐的大爱仙尊啊！',
+'''4月23，和方源一起吃冰淇淋，甜甜的很好吃，方源还帮我擦嘴
+4月24，和方源去商量山，世界最暖和的地方在商家的演武场
+4月25，和方源去三王山，有人在那里炼仙蛊，不知道会是什么呢
+4月26，和方源去天庭，星宿仙尊很可怕，但是有方源在，所以不可怕
+方源最好了，冰冰只爱方源''')
+time.sleep(1)
+print('''女童：哎呀，我的玩具
+一个女童叫着，在人群中追逐着陀螺，陀螺恰好滚到了方源的脚下，女童也撞到了方源的腿上，跌倒在地
+女童的父亲：诶呀，女儿你都干了什么，冲撞了估摸师大人我们拿什么活命啊？
+女童的父亲连忙赶到，看到方源的服饰，脸色吓得惨白如纸，急忙拉起女童，扑通就跪了下来
+女童的父亲：不要哭，闯祸精！
+父亲又惊又怒又怕，一个巴掌甩了过去，却被方源伸手抓住
+方源：只是一点小事，无需挂怀
+方源淡淡一笑，伸手摸向女童的小脑袋，轻声安慰道：“没事的，不用害怕。”
+女童也在此刻抬起头颅，方源瞳孔猛地一缩，察觉到了不对劲。此时，女童缓缓起身，旋即用稚嫩的语气轻笑一声道：
+“嘿嘿，方源大哥哥，很简单，我成尊不就是了”
+说完，她的气息不再掩饰，显露而出，九转修为。方源大惊失色，春秋蝉也被这气息死死压住，动弹不得
+女童一身单薄素衣随风飘扬，清了清嗓子，悠悠吟道：
+“早岁已知人贪玩，仍许陀螺碰方源。
+飞转缥缈身如燕，翩翩起舞姿无限。
+万念童心未曾泯，生死有命只问天。
+今朝陀出风云起，转蛊转人还转天！”''')
 # ==============================================================
 import turtle
 
@@ -1011,7 +1100,7 @@ import pygame
 
 # 初始化配置
 pygame.init()
-screen = pygame.display.set_mode((400, 200))
+screen = pygame.display.set_mode((600, 400))
 clock = pygame.time.Clock()
 
 # 创建矩形（修正类名和变量名）
@@ -1055,8 +1144,8 @@ pygame.quit()
 import pygame
 
 # 常量配置
-SCREEN_WIDTH = 400
-SCREEN_HEIGHT = 200
+SCREEN_WIDTH = 600
+SCREEN_HEIGHT = 400
 SQUARE_SIZE = 50
 MOVE_STEP = 20
 
@@ -1142,6 +1231,215 @@ while True:
     # 渲染
     screen.fill("black")
     pygame.draw.rect(screen, "red", square_pos)
+    pygame.draw.circle(screen, "blue", circle_pos, CIRCLE_RADIUS)
+    pygame.display.flip()
+    clock.tick(60)
+#====================================================
+#可触碰版
+import pygame
+import math
+import random
+
+# 常量配置
+SCREEN_WIDTH = 600
+SCREEN_HEIGHT = 400
+SQUARE_SIZE = 50
+MOVE_STEP = 20
+BALL_MOVE_FORCE = 0.5  # 小球控制力度
+
+# 物理参数
+CIRCLE_RADIUS = 20
+GRAVITY = 0.7
+DAMPING = 0.75  # 摩擦衰减
+BOUNCE_STRENGTH = 0.9  # 增加弹跳强度
+AIR_RESISTANCE = 0.99  # 空气阻力
+MAX_Y_SPEED = 15  # 最大下落速度
+SQUARE_MASS = 2.0  # 方块质量
+
+pygame.init()
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+clock = pygame.time.Clock()
+
+# 游戏对象初始化
+square = pygame.Rect(
+    (SCREEN_WIDTH - SQUARE_SIZE) // 2,
+    (SCREEN_HEIGHT - SQUARE_SIZE) // 2,
+    SQUARE_SIZE,
+    SQUARE_SIZE,
+)
+prev_square_pos = square.copy()
+
+circle_pos = pygame.Vector2(SCREEN_WIDTH // 2, 50)
+circle_vel = pygame.Vector2(3, 0)
+
+
+def reset_ball():
+    """重置小球位置和速度"""
+    global circle_pos, circle_vel
+    circle_pos = pygame.Vector2(SCREEN_WIDTH // 2, 50)
+    # 随机方向（0-360度）初始速度
+    angle = math.radians(random.uniform(0, 360))
+    speed = 5
+    circle_vel = pygame.Vector2(speed * math.cos(angle), speed * math.sin(angle))
+
+
+def check_collision(rect, circle_pos, radius):
+    """碰撞检测函数"""
+    closest_x = max(rect.left, min(circle_pos.x, rect.right))
+    closest_y = max(rect.top, min(circle_pos.y, rect.bottom))
+    dx = circle_pos.x - closest_x
+    dy = circle_pos.y - closest_y
+    distance_sq = dx**2 + dy**2
+
+    # 处理顶点碰撞
+    is_corner = (closest_x in (rect.left, rect.right)) and (
+        closest_y in (rect.top, rect.bottom)
+    )
+
+    if is_corner and distance_sq < radius**2:
+        distance = math.sqrt(distance_sq)
+        normal = (
+            pygame.Vector2(dx / distance, dy / distance)
+            if distance != 0
+            else pygame.Vector2(0, 1)
+        )
+        return True, normal, radius - distance
+
+    if distance_sq < radius**2:
+        distance = math.sqrt(distance_sq)
+        if distance == 0:
+            left = circle_pos.x - rect.left
+            right = rect.right - circle_pos.x
+            top = circle_pos.y - rect.top
+            bottom = rect.bottom - circle_pos.y
+            min_side = min(left, right, top, bottom)
+            if min_side == left:
+                normal = pygame.Vector2(-1, 0)
+            elif min_side == right:
+                normal = pygame.Vector2(1, 0)
+            elif min_side == top:
+                normal = pygame.Vector2(0, -1)
+            else:
+                normal = pygame.Vector2(0, 1)
+            return True, normal, radius
+        normal = pygame.Vector2(dx / distance, dy / distance)
+        return True, normal, radius - distance
+
+    if rect.collidepoint(circle_pos):
+        left = circle_pos.x - rect.left
+        right = rect.right - circle_pos.x
+        top = circle_pos.y - rect.top
+        bottom = rect.bottom - circle_pos.y
+        min_dist = min(left, right, top, bottom)
+        if min_dist < radius:
+            if min_dist == left:
+                normal = pygame.Vector2(-1, 0)
+            elif min_dist == right:
+                normal = pygame.Vector2(1, 0)
+            elif min_dist == top:
+                normal = pygame.Vector2(0, -1)
+            else:
+                normal = pygame.Vector2(0, 1)
+            return True, normal, radius - min_dist
+
+    return False, None, 0
+
+
+def handle_boundary_collision(pos, vel, radius):
+    """边界碰撞处理"""
+    # 垂直碰撞（增加底部弹跳强度）
+    if pos.y > SCREEN_HEIGHT - radius:
+        pos.y = SCREEN_HEIGHT - radius
+        vel.y *= -BOUNCE_STRENGTH * 1.2  # 增加底部弹跳力度
+        vel.x *= DAMPING
+    elif pos.y < radius:
+        pos.y = radius
+        vel.y *= -BOUNCE_STRENGTH
+
+    # 水平碰撞
+    if pos.x > SCREEN_WIDTH - radius:
+        pos.x = SCREEN_WIDTH - radius
+        vel.x *= -BOUNCE_STRENGTH
+    elif pos.x < radius:
+        pos.x = radius
+        vel.x *= -BOUNCE_STRENGTH
+
+    return pos, vel
+
+
+# 主循环
+while True:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            exit()
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_q:  # Q键重置小球
+                reset_ball()
+
+    # 方块控制
+    keys = pygame.key.get_pressed()
+    prev_square_pos = square.copy()
+    if keys[pygame.K_UP]:
+        square.y = max(0, square.y - MOVE_STEP)
+    if keys[pygame.K_DOWN]:
+        square.y = min(SCREEN_HEIGHT - SQUARE_SIZE, square.y + MOVE_STEP)
+    if keys[pygame.K_LEFT]:
+        square.x = max(0, square.x - MOVE_STEP)
+    if keys[pygame.K_RIGHT]:
+        square.x = min(SCREEN_WIDTH - SQUARE_SIZE, square.x + MOVE_STEP)
+
+    # 小球WASD控制
+    if keys[pygame.K_w]:
+        circle_vel.y -= BALL_MOVE_FORCE
+    if keys[pygame.K_s]:
+        circle_vel.y += BALL_MOVE_FORCE
+    if keys[pygame.K_a]:
+        circle_vel.x -= BALL_MOVE_FORCE
+    if keys[pygame.K_d]:
+        circle_vel.x += BALL_MOVE_FORCE
+
+    # 计算方块速度
+    square_vel = pygame.Vector2(
+        square.x - prev_square_pos.x, square.y - prev_square_pos.y
+    )
+
+    # 小球物理模拟
+    circle_vel.y = min(circle_vel.y + GRAVITY, MAX_Y_SPEED)
+    circle_vel *= AIR_RESISTANCE
+
+    # 预测新位置
+    new_pos = circle_pos + circle_vel
+
+    # 边界碰撞处理
+    new_pos, circle_vel = handle_boundary_collision(new_pos, circle_vel, CIRCLE_RADIUS)
+
+    # 方块碰撞处理
+    collided, normal, penetration = check_collision(square, new_pos, CIRCLE_RADIUS)
+    if collided:
+        new_pos += normal * penetration
+        vel_normal = circle_vel.dot(normal) * normal
+        vel_tangent = circle_vel - vel_normal
+
+        # 加入方块速度影响
+        square_effect = square_vel.dot(normal) * (1 / SQUARE_MASS)
+
+        circle_vel = (
+            (-vel_normal * BOUNCE_STRENGTH)
+            + vel_tangent * DAMPING
+            + square_effect * normal * 2
+        )
+
+    # 更新位置
+    circle_pos = new_pos
+
+    # 速度衰减
+    if circle_vel.magnitude() < 0.1:
+        circle_vel = pygame.Vector2()
+
+    # 渲染
+    screen.fill("black")
+    pygame.draw.rect(screen, "red", square)
     pygame.draw.circle(screen, "blue", circle_pos, CIRCLE_RADIUS)
     pygame.display.flip()
     clock.tick(60)
