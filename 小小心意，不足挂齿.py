@@ -708,7 +708,7 @@ if 血颅蛊 == '众人所望' and 方源 == '哭泣':
 蛊真人 = '方源诵诗'
 if 蛊真人 == '方源诵诗':
     print('''落魄谷中寒风吹，春秋蝉鸣少年归。
-荡魂深处石人泪，定仙游走魔向北。
+荡魂山处石人泪，定仙游走魔向北。
 逆流河上万仙退，爱情不敌坚持泪。
 宿命中成命中败，仙尊悔，而我不悔！''')
     time.sleep(1)
@@ -810,7 +810,7 @@ pen.hideturtle()
 
 # 结束
 turtle.done()#阻塞程序并保持窗口打开，直到用户手动关闭
-turtle.mainloop()
+# turtle.mainloop()
 # ===============================================================
 # from turtle import*#可以不用导入，直接用turtle
 import turtle
@@ -1016,7 +1016,7 @@ for i in range(20):
     t.forward(30)
     t.left(90)
 t.done()
-#RGB red green blue'''
+#RGB red green blue
 #==================================
 #繁星满天
 import random
@@ -1059,390 +1059,189 @@ for i in range(20):
     green = random.randint(180,255)
     blue = 0
     t.color(red, green, blue)
-    drawStar()
+    drawStar()'''
 #===================================
-#如果柱状图报错，就用这个
-import matplotlib
-matplotlib.use('TkAgg')  # 或者 'Qt5Agg'
-import matplotlib.pyplot as plt
-import numpy as np
-
-# 生成随机数据
-var = np.random.randint(1, 10, 10)
-
-# 绘制柱状图
-plt.bar(range(len(var)), var)
-
-# 显示图表
-plt.show()
-# ==================================
-# 没有输出看看这个
-def fire(n, c=1):
-    # 参数类型校验
-    if not isinstance(n, int) or not isinstance(c, int):
-        raise TypeError("参数必须是整数")
-
-    # 参数范围校验
-    if n < 1 or c < 1 or c > n:
-        raise ValueError("参数范围无效：n需≥1且1≤c≤n")
-
-    # 修正金字塔方向
-    for current in range(c, n + 1):
-        spaces = ' ' * (n - current)  # 修正空格计算逻辑
-        stars = '*' * (2 * current - 1)  # 修正星号计算逻辑
-        print(spaces + stars)
-
-
-fire(5)
-# ==================================
-#可玩版本，到底哪里错了！
+#不计分
 import pygame
+import math
+import random
+from pygame.math import Vector2
 
-# 初始化配置
-pygame.init()
-screen = pygame.display.set_mode((600, 400))
-clock = pygame.time.Clock()
+# 窗口配置
+SCREEN_WIDTH = 1500
+SCREEN_HEIGHT = 900
 
-# 创建矩形（修正类名和变量名）
-square_pos = pygame.Rect(175, 75, 50, 50)  # 居中初始位置
-
-running = True
-while running:
-    # 正确处理事件队列
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-
-    # 获取按键状态
-    keys = pygame.key.get_pressed()
-    move_speed = 20  # 统一速度变量
-
-    # 处理移动（带边界检测）
-    new_x = square_pos.x
-    new_y = square_pos.y
-
-    if keys[pygame.K_UP]:
-        new_y = max(0, square_pos.y - move_speed)
-    if keys[pygame.K_DOWN]:
-        new_y = min(screen.get_height() - 50, square_pos.y + move_speed)
-    if keys[pygame.K_LEFT]:
-        new_x = max(0, square_pos.x - move_speed)
-    if keys[pygame.K_RIGHT]:
-        new_x = min(screen.get_width() - 50, square_pos.x + move_speed)
-
-    square_pos.topleft = (new_x, new_y)
-
-    # 渲染逻辑
-    screen.fill("black")
-    pygame.draw.rect(screen, "red", square_pos)
-    pygame.display.flip()
-    clock.tick(60)
-
-pygame.quit()
-# =================================
-#有小球版本
-import pygame
-
-# 常量配置
-SCREEN_WIDTH = 600
-SCREEN_HEIGHT = 400
-SQUARE_SIZE = 50
-MOVE_STEP = 20
-
-# 圆形物理参数
-CIRCLE_RADIUS = 20
-GRAVITY = 0.5
-DAMPING = 0.85  # 能量衰减系数
-BOUNCE_STRENGTH = 0.8  # 碰撞反弹强度
-MAX_Y_SPEED = 15  # 防止速度过大穿透地面
+# 物理参数
+PLAYER_BASE_SPEED = 20
+PLAYER_BOOST_MULTIPLIER = 1.8  # 加速倍率
+BALL_RADIUS = 20
+BOUNCE_STRENGTH = 0.85
+COLLISION_FORCE = 28
+BLUE_ACC = 0.99  # 蓝球加速度调整
+BLUE_SPEED_CAP = 25  # 保持原最大速度
+BOOST_TIME_THRESHOLD = 27  # 60帧=1秒
 
 pygame.init()
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 clock = pygame.time.Clock()
 
-# 矩形初始化
-square_pos = pygame.Rect(
-    (SCREEN_WIDTH - SQUARE_SIZE) // 2,
-    (SCREEN_HEIGHT - SQUARE_SIZE) // 2,
-    SQUARE_SIZE,
-    SQUARE_SIZE,
-)
+# 游戏对象
+player = pygame.Rect(750, 750, 50, 50)
+blue_pos = Vector2(750, 750)
+blue_vel = Vector2()
+yellow_pos = Vector2(SCREEN_WIDTH // 2, 200)
+yellow_vel = Vector2(3, 0)
 
-# 圆形物理系统初始化
-circle_pos = pygame.Vector2(SCREEN_WIDTH // 2, 50)  # 从顶部开始下落
-circle_velocity = pygame.Vector2(3, 0)  # 初始水平速度
+# 按键计时器
+key_hold_timer = {pygame.K_UP: 0, pygame.K_DOWN: 0, pygame.K_LEFT: 0, pygame.K_RIGHT: 0}
 
+
+def reset_ball():
+    global blue_pos, blue_vel
+    blue_pos = Vector2(750, 750)
+    angle = math.radians(random.uniform(0, 360))
+    blue_vel = Vector2(15 * math.cos(angle), 15 * math.sin(angle))  # 加强初始速度
+
+
+def check_collision(rect, circle_pos, radius):
+    closest_x = max(rect.left, min(circle_pos.x, rect.right))
+    closest_y = max(rect.top, min(circle_pos.y, rect.bottom))
+    dx = circle_pos.x - closest_x
+    dy = circle_pos.y - closest_y
+    return dx**2 + dy**2 < radius**2
+
+
+def check_ball_collision(pos1, pos2, radius):
+    return pos1.distance_to(pos2) < radius * 2
+
+
+def handle_boundary(pos, vel, radius):
+    if pos.x < radius:
+        pos.x = radius
+        vel.x = abs(vel.x) * BOUNCE_STRENGTH
+    elif pos.x > SCREEN_WIDTH - radius:
+        pos.x = SCREEN_WIDTH - radius
+        vel.x = -abs(vel.x) * BOUNCE_STRENGTH
+
+    if pos.y < radius:
+        pos.y = radius
+        vel.y = abs(vel.y) * BOUNCE_STRENGTH
+    elif pos.y > SCREEN_HEIGHT - radius:
+        pos.y = SCREEN_HEIGHT - radius
+        vel.y = -abs(vel.y) * BOUNCE_STRENGTH * 1.2
+    return pos, vel
+
+
+def update_blue_ai():
+    global blue_vel
+    target_dir = (yellow_pos - blue_pos).normalize()
+    blue_vel += target_dir * BLUE_ACC
+
+    # 速度限制
+    if blue_vel.magnitude() > BLUE_SPEED_CAP:
+        blue_vel = blue_vel.normalize() * BLUE_SPEED_CAP
+
+    # 保持0.99速度衰减
+    blue_vel *= 0.99
+
+
+def update_yellow_ai():
+    global yellow_vel
+    escape_dir = (yellow_pos - player.center).normalize() + (
+        yellow_pos - blue_pos
+    ).normalize()
+    escape_dir = escape_dir.normalize()
+
+    # 边缘逃生
+    if yellow_pos.x < 150 or yellow_pos.x > SCREEN_WIDTH - 150:
+        escape_dir.y += 0.8 * (-1 if yellow_pos.y < SCREEN_HEIGHT / 2 else 1)
+    if yellow_pos.y < 150 or yellow_pos.y > SCREEN_HEIGHT - 150:
+        escape_dir.x += 0.8 * (-1 if yellow_pos.x < SCREEN_WIDTH / 2 else 1)
+
+    yellow_vel += escape_dir * 0.035  # 加强逃生加速度
+    if yellow_vel.magnitude() > 35:  # 提高黄球速度上限
+        yellow_vel = yellow_vel.normalize() * 35
+
+
+# 游戏主循环
 while True:
     # 事件处理
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             exit()
+        elif event.type == pygame.KEYDOWN and event.key == pygame.K_q:
+            reset_ball()
 
-    # 输入处理
+    # 更新按键计时
     keys = pygame.key.get_pressed()
-    if keys[pygame.K_UP]:
-        square_pos.y = max(0, square_pos.y - MOVE_STEP)
-    if keys[pygame.K_DOWN]:
-        square_pos.y = min(SCREEN_HEIGHT - SQUARE_SIZE, square_pos.y + MOVE_STEP)
-    if keys[pygame.K_LEFT]:
-        square_pos.x = max(0, square_pos.x - MOVE_STEP)
-    if keys[pygame.K_RIGHT]:
-        square_pos.x = min(SCREEN_WIDTH - SQUARE_SIZE, square_pos.x + MOVE_STEP)
+    for key in [pygame.K_UP, pygame.K_DOWN, pygame.K_LEFT, pygame.K_RIGHT]:
+        key_hold_timer[key] = key_hold_timer[key] + 1 if keys[key] else 0
 
-    # 圆形物理模拟
-    # 应用重力
-    circle_velocity.y = min(circle_velocity.y + GRAVITY, MAX_Y_SPEED)
+    # 玩家移动计算
+    y_speed = PLAYER_BASE_SPEED
+    x_speed = PLAYER_BASE_SPEED
 
-    # 更新位置
-    new_pos = circle_pos + circle_velocity
+    # 垂直方向加速
+    if keys[pygame.K_UP] and key_hold_timer[pygame.K_UP] > BOOST_TIME_THRESHOLD:
+        y_speed *= PLAYER_BOOST_MULTIPLIER
+    if keys[pygame.K_DOWN] and key_hold_timer[pygame.K_DOWN] > BOOST_TIME_THRESHOLD:
+        y_speed *= PLAYER_BOOST_MULTIPLIER
 
-    # 边界碰撞检测
-    # 底部碰撞
-    if new_pos.y > SCREEN_HEIGHT - CIRCLE_RADIUS:
-        new_pos.y = SCREEN_HEIGHT - CIRCLE_RADIUS
-        circle_velocity.y *= -BOUNCE_STRENGTH
-        circle_velocity.x *= DAMPING  # 水平方向能量衰减
+    # 水平方向加速
+    if keys[pygame.K_LEFT] and key_hold_timer[pygame.K_LEFT] > BOOST_TIME_THRESHOLD:
+        x_speed *= PLAYER_BOOST_MULTIPLIER
+    if keys[pygame.K_RIGHT] and key_hold_timer[pygame.K_RIGHT] > BOOST_TIME_THRESHOLD:
+        x_speed *= PLAYER_BOOST_MULTIPLIER
 
-    # 顶部碰撞
-    if new_pos.y < CIRCLE_RADIUS:
-        new_pos.y = CIRCLE_RADIUS
-        circle_velocity.y *= -BOUNCE_STRENGTH
+    # 应用移动
+    player.y = max(
+        0,
+        min(
+            SCREEN_HEIGHT - 50,
+            player.y - keys[pygame.K_UP] * y_speed + keys[pygame.K_DOWN] * y_speed,
+        ),
+    )
+    player.x = max(
+        0,
+        min(
+            SCREEN_WIDTH - 50,
+            player.x - keys[pygame.K_LEFT] * x_speed + keys[pygame.K_RIGHT] * x_speed,
+        ),
+    )
 
-    # 右侧碰撞
-    if new_pos.x > SCREEN_WIDTH - CIRCLE_RADIUS:
-        new_pos.x = SCREEN_WIDTH - CIRCLE_RADIUS
-        circle_velocity.x *= -BOUNCE_STRENGTH
+    # 更新蓝球
+    update_blue_ai()
+    blue_pos += blue_vel
+    blue_pos, blue_vel = handle_boundary(blue_pos, blue_vel, BALL_RADIUS)
 
-    # 左侧碰撞
-    if new_pos.x < CIRCLE_RADIUS:
-        new_pos.x = CIRCLE_RADIUS
-        circle_velocity.x *= -BOUNCE_STRENGTH
+    # 更新黄球
+    update_yellow_ai()
+    yellow_pos += yellow_vel
+    yellow_pos, yellow_vel = handle_boundary(yellow_pos, yellow_vel, BALL_RADIUS)
 
-    # 应用最终位置
-    circle_pos = new_pos
+    # 碰撞处理
+    if check_ball_collision(blue_pos, yellow_pos, BALL_RADIUS):
+        collision_dir = (yellow_pos - blue_pos).normalize()
+        blue_vel = -collision_dir * COLLISION_FORCE * 0.7
+        yellow_vel = collision_dir * COLLISION_FORCE * 1.4
 
-    # 能量衰减（防止无限弹跳）
-    if abs(circle_velocity.x) < 0.1:
-        circle_velocity.x = 0
-    if abs(circle_velocity.y) < 0.1:
-        circle_velocity.y = 0
+    if check_collision(player, yellow_pos, BALL_RADIUS):
+        dir = (yellow_pos - player.center).normalize()
+        yellow_vel = dir * COLLISION_FORCE * 1.2
+
+    if check_collision(player, blue_pos, BALL_RADIUS):
+        dir = (blue_pos - player.center).normalize()
+        blue_vel = dir * COLLISION_FORCE * 0.8
 
     # 渲染
     screen.fill("black")
-    pygame.draw.rect(screen, "red", square_pos)
-    pygame.draw.circle(screen, "blue", circle_pos, CIRCLE_RADIUS)
+    pygame.draw.rect(screen, "red", player)
+    pygame.draw.circle(screen, "blue", blue_pos, BALL_RADIUS)
+    pygame.draw.circle(screen, "yellow", yellow_pos, BALL_RADIUS)
     pygame.display.flip()
     clock.tick(60)
-#====================================================
-#可触碰版
-import pygame
-import math
-import random
 
-# 常量配置
-SCREEN_WIDTH = 600
-SCREEN_HEIGHT = 400
-SQUARE_SIZE = 50
-MOVE_STEP = 20
-BALL_MOVE_FORCE = 0.5  # 小球控制力度
-
-# 物理参数
-CIRCLE_RADIUS = 20
-GRAVITY = 0.7
-DAMPING = 0.75  # 摩擦衰减
-BOUNCE_STRENGTH = 0.9  # 增加弹跳强度
-AIR_RESISTANCE = 0.99  # 空气阻力
-MAX_Y_SPEED = 15  # 最大下落速度
-SQUARE_MASS = 2.0  # 方块质量
-
-pygame.init()
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-clock = pygame.time.Clock()
-
-# 游戏对象初始化
-square = pygame.Rect(
-    (SCREEN_WIDTH - SQUARE_SIZE) // 2,
-    (SCREEN_HEIGHT - SQUARE_SIZE) // 2,
-    SQUARE_SIZE,
-    SQUARE_SIZE,
-)
-prev_square_pos = square.copy()
-
-circle_pos = pygame.Vector2(SCREEN_WIDTH // 2, 50)
-circle_vel = pygame.Vector2(3, 0)
-
-
-def reset_ball():
-    """重置小球位置和速度"""
-    global circle_pos, circle_vel
-    circle_pos = pygame.Vector2(SCREEN_WIDTH // 2, 50)
-    # 随机方向（0-360度）初始速度
-    angle = math.radians(random.uniform(0, 360))
-    speed = 5
-    circle_vel = pygame.Vector2(speed * math.cos(angle), speed * math.sin(angle))
-
-
-def check_collision(rect, circle_pos, radius):
-    """碰撞检测函数"""
-    closest_x = max(rect.left, min(circle_pos.x, rect.right))
-    closest_y = max(rect.top, min(circle_pos.y, rect.bottom))
-    dx = circle_pos.x - closest_x
-    dy = circle_pos.y - closest_y
-    distance_sq = dx**2 + dy**2
-
-    # 处理顶点碰撞
-    is_corner = (closest_x in (rect.left, rect.right)) and (
-        closest_y in (rect.top, rect.bottom)
-    )
-
-    if is_corner and distance_sq < radius**2:
-        distance = math.sqrt(distance_sq)
-        normal = (
-            pygame.Vector2(dx / distance, dy / distance)
-            if distance != 0
-            else pygame.Vector2(0, 1)
-        )
-        return True, normal, radius - distance
-
-    if distance_sq < radius**2:
-        distance = math.sqrt(distance_sq)
-        if distance == 0:
-            left = circle_pos.x - rect.left
-            right = rect.right - circle_pos.x
-            top = circle_pos.y - rect.top
-            bottom = rect.bottom - circle_pos.y
-            min_side = min(left, right, top, bottom)
-            if min_side == left:
-                normal = pygame.Vector2(-1, 0)
-            elif min_side == right:
-                normal = pygame.Vector2(1, 0)
-            elif min_side == top:
-                normal = pygame.Vector2(0, -1)
-            else:
-                normal = pygame.Vector2(0, 1)
-            return True, normal, radius
-        normal = pygame.Vector2(dx / distance, dy / distance)
-        return True, normal, radius - distance
-
-    if rect.collidepoint(circle_pos):
-        left = circle_pos.x - rect.left
-        right = rect.right - circle_pos.x
-        top = circle_pos.y - rect.top
-        bottom = rect.bottom - circle_pos.y
-        min_dist = min(left, right, top, bottom)
-        if min_dist < radius:
-            if min_dist == left:
-                normal = pygame.Vector2(-1, 0)
-            elif min_dist == right:
-                normal = pygame.Vector2(1, 0)
-            elif min_dist == top:
-                normal = pygame.Vector2(0, -1)
-            else:
-                normal = pygame.Vector2(0, 1)
-            return True, normal, radius - min_dist
-
-    return False, None, 0
-
-
-def handle_boundary_collision(pos, vel, radius):
-    """边界碰撞处理"""
-    # 垂直碰撞（增加底部弹跳强度）
-    if pos.y > SCREEN_HEIGHT - radius:
-        pos.y = SCREEN_HEIGHT - radius
-        vel.y *= -BOUNCE_STRENGTH * 1.2  # 增加底部弹跳力度
-        vel.x *= DAMPING
-    elif pos.y < radius:
-        pos.y = radius
-        vel.y *= -BOUNCE_STRENGTH
-
-    # 水平碰撞
-    if pos.x > SCREEN_WIDTH - radius:
-        pos.x = SCREEN_WIDTH - radius
-        vel.x *= -BOUNCE_STRENGTH
-    elif pos.x < radius:
-        pos.x = radius
-        vel.x *= -BOUNCE_STRENGTH
-
-    return pos, vel
-
-
-# 主循环
-while True:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            exit()
-        elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_q:  # Q键重置小球
-                reset_ball()
-
-    # 方块控制
-    keys = pygame.key.get_pressed()
-    prev_square_pos = square.copy()
-    if keys[pygame.K_UP]:
-        square.y = max(0, square.y - MOVE_STEP)
-    if keys[pygame.K_DOWN]:
-        square.y = min(SCREEN_HEIGHT - SQUARE_SIZE, square.y + MOVE_STEP)
-    if keys[pygame.K_LEFT]:
-        square.x = max(0, square.x - MOVE_STEP)
-    if keys[pygame.K_RIGHT]:
-        square.x = min(SCREEN_WIDTH - SQUARE_SIZE, square.x + MOVE_STEP)
-
-    # 小球WASD控制
-    if keys[pygame.K_w]:
-        circle_vel.y -= BALL_MOVE_FORCE
-    if keys[pygame.K_s]:
-        circle_vel.y += BALL_MOVE_FORCE
-    if keys[pygame.K_a]:
-        circle_vel.x -= BALL_MOVE_FORCE
-    if keys[pygame.K_d]:
-        circle_vel.x += BALL_MOVE_FORCE
-
-    # 计算方块速度
-    square_vel = pygame.Vector2(
-        square.x - prev_square_pos.x, square.y - prev_square_pos.y
-    )
-
-    # 小球物理模拟
-    circle_vel.y = min(circle_vel.y + GRAVITY, MAX_Y_SPEED)
-    circle_vel *= AIR_RESISTANCE
-
-    # 预测新位置
-    new_pos = circle_pos + circle_vel
-
-    # 边界碰撞处理
-    new_pos, circle_vel = handle_boundary_collision(new_pos, circle_vel, CIRCLE_RADIUS)
-
-    # 方块碰撞处理
-    collided, normal, penetration = check_collision(square, new_pos, CIRCLE_RADIUS)
-    if collided:
-        new_pos += normal * penetration
-        vel_normal = circle_vel.dot(normal) * normal
-        vel_tangent = circle_vel - vel_normal
-
-        # 加入方块速度影响
-        square_effect = square_vel.dot(normal) * (1 / SQUARE_MASS)
-
-        circle_vel = (
-            (-vel_normal * BOUNCE_STRENGTH)
-            + vel_tangent * DAMPING
-            + square_effect * normal * 2
-        )
-
-    # 更新位置
-    circle_pos = new_pos
-
-    # 速度衰减
-    if circle_vel.magnitude() < 0.1:
-        circle_vel = pygame.Vector2()
-
-    # 渲染
-    screen.fill("black")
-    pygame.draw.rect(screen, "red", square)
-    pygame.draw.circle(screen, "blue", circle_pos, CIRCLE_RADIUS)
-    pygame.display.flip()
-    clock.tick(60)
 
 
 
