@@ -1241,6 +1241,229 @@ while True:
     pygame.draw.circle(screen, "yellow", yellow_pos, BALL_RADIUS)
     pygame.display.flip()
     clock.tick(60)
+#=======================================================================================================================
+# 计分
+import pygame
+import math
+import random
+from pygame.math import Vector2
+
+# 窗口配置
+SCREEN_WIDTH = 1500
+SCREEN_HEIGHT = 900
+
+# 游戏参数
+游戏时长 = 60  # 单位：秒
+玩家基础速度 = 20
+加速倍率 = 1.8
+小球半径 = 20
+反弹系数 = 0.85
+碰撞力度 = 28
+蓝球加速度 = 0.99
+蓝球最大速度 = 25
+加速时间阈值 = 27  # 0.45秒
+
+pygame.init()
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+clock = pygame.time.Clock()
+# 使用中文字体（确保系统有SimHei字体）
+font = pygame.font.SysFont("SimHei", 36)
+大字体 = pygame.font.SysFont("SimHei", 72, bold=True)
+
+# 游戏状态
+游戏进行中 = False
+开始时间 = 0
+分数 = 0
+
+# 游戏对象
+玩家 = pygame.Rect(750, 750, 50, 50)
+蓝球位置 = Vector2(750, 750)
+蓝球速度 = Vector2()
+黄球位置 = Vector2(SCREEN_WIDTH // 2, 200)
+黄球速度 = Vector2(3, 0)
+
+# 按键计时
+按键计时器 = {pygame.K_UP: 0, pygame.K_DOWN: 0, pygame.K_LEFT: 0, pygame.K_RIGHT: 0}
+
+
+def 重置游戏():
+    global 玩家, 蓝球位置, 蓝球速度, 黄球位置, 黄球速度, 分数, 开始时间, 游戏进行中
+    玩家 = pygame.Rect(750, 750, 50, 50)
+    蓝球位置 = Vector2(750, 750)
+    随机角度 = math.radians(random.uniform(0, 360))
+    蓝球速度 = Vector2(15 * math.cos(随机角度), 15 * math.sin(随机角度))
+    黄球位置 = Vector2(SCREEN_WIDTH // 2, 200)
+    黄球速度 = Vector2(3, 0)
+    分数 = 0
+    开始时间 = pygame.time.get_ticks()
+    游戏进行中 = True
+
+
+def 检测碰撞(矩形, 圆形位置, 半径):
+    最近x = max(矩形.left, min(圆形位置.x, 矩形.right))
+    最近y = max(矩形.top, min(圆形位置.y, 矩形.bottom))
+    dx = 圆形位置.x - 最近x
+    dy = 圆形位置.y - 最近y
+    return dx**2 + dy**2 < 半径**2
+
+
+def 小球碰撞检测(位置1, 位置2, 半径):
+    return 位置1.distance_to(位置2) < 半径 * 2
+
+
+def 处理边界(位置, 速度, 半径):
+    if 位置.x < 半径:
+        位置.x = 半径
+        速度.x = abs(速度.x) * 反弹系数
+    elif 位置.x > SCREEN_WIDTH - 半径:
+        位置.x = SCREEN_WIDTH - 半径
+        速度.x = -abs(速度.x) * 反弹系数
+
+    if 位置.y < 半径:
+        位置.y = 半径
+        速度.y = abs(速度.y) * 反弹系数
+    elif 位置.y > SCREEN_HEIGHT - 半径:
+        位置.y = SCREEN_HEIGHT - 半径
+        速度.y = -abs(速度.y) * 反弹系数 * 1.2
+    return 位置, 速度
+
+
+def 更新蓝球AI():
+    global 蓝球速度
+    目标方向 = (黄球位置 - 蓝球位置).normalize()
+    蓝球速度 += 目标方向 * 蓝球加速度
+
+    if 蓝球速度.magnitude() > 蓝球最大速度:
+        蓝球速度 = 蓝球速度.normalize() * 蓝球最大速度
+    蓝球速度 *= 0.99
+
+
+def 更新黄球AI():
+    global 黄球速度
+    逃生方向 = (黄球位置 - 玩家.center).normalize() + (黄球位置 - 蓝球位置).normalize()
+    逃生方向 = 逃生方向.normalize()
+
+    if 黄球位置.x < 150 or 黄球位置.x > SCREEN_WIDTH - 150:
+        逃生方向.y += 0.8 * (-1 if 黄球位置.y < SCREEN_HEIGHT / 2 else 1)
+    if 黄球位置.y < 150 or 黄球位置.y > SCREEN_HEIGHT - 150:
+        逃生方向.x += 0.8 * (-1 if 黄球位置.x < SCREEN_WIDTH / 2 else 1)
+
+    黄球速度 += 逃生方向 * 0.035
+    if 黄球速度.magnitude() > 35:
+        黄球速度 = 黄球速度.normalize() * 35
+
+
+def 绘制界面():
+    if 游戏进行中:
+        剩余时间 = 游戏时长 - (pygame.time.get_ticks() - 开始时间) // 1000
+        分数文本 = font.render(f"分数: {分数:.1f}", True, "white")
+        时间文本 = font.render(f"剩余时间: {剩余时间}秒", True, "white")
+        screen.blit(分数文本, (10, 10))
+        screen.blit(时间文本, (10, 50))
+    else:
+        screen.fill("black")
+        最终分数文本 = 大字体.render(f"最终得分: {分数:.1f}", True, "yellow")
+        提示文本 = font.render("按回车键重新开始", True, "white")
+        screen.blit(
+            最终分数文本,
+            (
+                SCREEN_WIDTH // 2 - 最终分数文本.get_width() // 2,
+                SCREEN_HEIGHT // 2 - 50,
+            ),
+        )
+        screen.blit(
+            提示文本,
+            (SCREEN_WIDTH // 2 - 提示文本.get_width() // 2, SCREEN_HEIGHT // 2 + 50),
+        )
+
+
+运行中 = True
+while 运行中:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            运行中 = False
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_q:
+                运行中 = False
+            elif event.key == pygame.K_RETURN and not 游戏进行中:
+                重置游戏()
+
+    if 游戏进行中:
+        # 更新按键计时
+        按键 = pygame.key.get_pressed()
+        for 键 in [pygame.K_UP, pygame.K_DOWN, pygame.K_LEFT, pygame.K_RIGHT]:
+            按键计时器[键] = 按键计时器[键] + 1 if 按键[键] else 0
+
+        # 玩家移动
+        y速度 = 玩家基础速度
+        x速度 = 玩家基础速度
+
+        if 按键[pygame.K_UP] and 按键计时器[pygame.K_UP] > 加速时间阈值:
+            y速度 *= 加速倍率
+        if 按键[pygame.K_DOWN] and 按键计时器[pygame.K_DOWN] > 加速时间阈值:
+            y速度 *= 加速倍率
+
+        if 按键[pygame.K_LEFT] and 按键计时器[pygame.K_LEFT] > 加速时间阈值:
+            x速度 *= 加速倍率
+        if 按键[pygame.K_RIGHT] and 按键计时器[pygame.K_RIGHT] > 加速时间阈值:
+            x速度 *= 加速倍率
+
+        玩家.y = max(
+            0,
+            min(
+                SCREEN_HEIGHT - 50,
+                玩家.y - 按键[pygame.K_UP] * y速度 + 按键[pygame.K_DOWN] * y速度,
+            ),
+        )
+        玩家.x = max(
+            0,
+            min(
+                SCREEN_WIDTH - 50,
+                玩家.x - 按键[pygame.K_LEFT] * x速度 + 按键[pygame.K_RIGHT] * x速度,
+            ),
+        )
+
+        # 更新蓝球
+        更新蓝球AI()
+        蓝球位置 += 蓝球速度
+        蓝球位置, 蓝球速度 = 处理边界(蓝球位置, 蓝球速度, 小球半径)
+
+        # 更新黄球
+        更新黄球AI()
+        黄球位置 += 黄球速度
+        黄球位置, 黄球速度 = 处理边界(黄球位置, 黄球速度, 小球半径)
+
+        # 碰撞处理
+        if 小球碰撞检测(蓝球位置, 黄球位置, 小球半径):
+            碰撞方向 = (黄球位置 - 蓝球位置).normalize()
+            蓝球速度 = -碰撞方向 * 碰撞力度 * 0.7
+            黄球速度 = 碰撞方向 * 碰撞力度 * 1.4
+            分数 += 0.5
+
+        if 检测碰撞(玩家, 黄球位置, 小球半径):
+            方向 = (黄球位置 - 玩家.center).normalize()
+            黄球速度 = 方向 * 碰撞力度 * 1.2
+            分数 += 1
+
+        if 检测碰撞(玩家, 蓝球位置, 小球半径):
+            方向 = (蓝球位置 - 玩家.center).normalize()
+            蓝球速度 = 方向 * 碰撞力度 * 0.8
+
+        # 检查时间
+        if (pygame.time.get_ticks() - 开始时间) // 1000 >= 游戏时长:
+            游戏进行中 = False
+
+    # 渲染
+    screen.fill("black")
+    if 游戏进行中:
+        pygame.draw.rect(screen, "red", 玩家)
+        pygame.draw.circle(screen, "blue", 蓝球位置, 小球半径)
+        pygame.draw.circle(screen, "yellow", 黄球位置, 小球半径)
+    绘制界面()
+    pygame.display.flip()
+    clock.tick(60)
+
+pygame.quit()
 
 
 
