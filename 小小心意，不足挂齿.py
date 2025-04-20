@@ -1,6 +1,6 @@
 a = 100
 b = 200
-print(a, b, '装逼，我让你飞起来')  #这是一个简单的代码
+print(a, b, '装逼，我让你飞起来')  # 这是一个简单的代码
 # ================================================
 a = 50
 b = 100
@@ -23,14 +23,14 @@ print(chr(20320), chr(22909))
 # ================================================
 flag = False
 name = 'liunx'
-if name == 'liunx':  #判断变量是否为 python
-    flag = True  #条件成立时设置标志为真
-    print('你好啊，新同学！')  #并输出欢迎信息
+if name == 'liunx':  # 判断变量是否为 python
+    flag = True  # 条件成立时设置标志为真
+    print('你好啊，新同学！')  # 并输出欢迎信息
 else:
-    print(name)  #条件不成立时输出变量名称
+    print(name)  # 条件不成立时输出变量名称
 # ===================================================
 num = 0
-if num == 3:  #判断Num的值
+if num == 3:  # 判断Num的值
     print('boss')
 elif num == 2:
     print('user')
@@ -38,37 +38,38 @@ elif num == 1:
     print('worker')
 elif num == 0:
     print('nimalege')
-elif num < 0:  #值小于零时输出
+elif num < 0:  # 值小于零时输出
     print('error')
 else:
-    print('roadman')  #条件不成立时输出
+    print('roadman')  # 条件不成立时输出
 # ===============================================
 cao = 9
-if cao >= 0 and cao <= 10:  #判断值是否在0~10之间
+if 0 <= cao <= 10:  # 判断值是否在0~10之间
     print('你好，你好，你好！')
-#输出结果：我不好
+# 输出结果：我不好
 
 cao = 10
-if cao < 0 and cao > 10:  #判断值是否在小于0或大于10
+if 0 > cao > 10:  # 判断值是否在小于0或大于10
     print('我上早八')
 else:
     print('宝了个贝的，这是给我干那来了，这还是国内吗？')
-#输出结果：孩子，这并不好笑
+# 输出结果：孩子，这并不好笑
 
 cao = 8
-#判断值是否在0~5或者10~15之间
-if (cao >= 0 and cao <= 5) or (cao >= 10 and cao <= 15):
+# 判断值是否在0~5或者10~15之间
+if (0 <= cao <= 5) or (10 <= cao <= 15):
     print('我测你温码')
 else:
     print('我是丁真，这是我的好朋友芝士雪豹。')
-#输出结果：嗷呜~ 雪豹别叫!
+# 输出结果：嗷呜~ 雪豹别叫!
 # ==============================================
+
 var = 100
 if var == 100:
     print("太好啦，是烧鸡，我们没救了！")
     print("心还没有悬着就去世了！")
-蛊真人 = '大专巅峰'
-if 蛊真人 == '大专巅峰':
+guzhenren = '大专巅峰'
+if guzhenren == '大专巅峰':
     print("“你到底干了什么，你不跟我们干，我们以后怎么赚大钱”室友跺着脚恶狠狠地瞪着他。")
     print("他淡然一笑“很简单，我进厂不就是了”说完，他的气息不再掩饰，显露而出，大专巅峰！！一瞬间，流水线再次一寂。")
     print("我乃大专巅峰！何人敢叼我，何人能叼我！他口中低吟道：")
@@ -82,14 +83,14 @@ if 蛊真人 == '大专巅峰':
     print("今朝人向工位处，打件打人还打天")
     print(
         "从今以后，他就彻底从一位学生变成一位打工人，可以堂堂正正的打螺丝，造福车间了，工友们的历史，资本家们的历史不得不记载他的名字，至此他和数百位工友并肩，宛若大日光照千古，其余同学无论多么豪杰英雄，皆为繁星。")
-大专生 = '发言'
-if 大专生 == '发言':
+collegeStudents = '大专生发言'
+if collegeStudents == '大专生发言':
     print('不过是些许风霜罢了')
     print('面对凶险万分的流水线，不退反进，仰天大喝：件来！')
     print('今朝剑指叠云处，炼蛊炼人还炼天')
 # ================================================
-age = input('打出你的年龄: ')  #输入你的年龄
-print(age)  #输出你的输入
+age = input('打出你的年龄: ')  # 输入你的年龄
+print(age)  # 输出你的输入
 # ================================================
 x = 10
 y = 5
@@ -97,48 +98,48 @@ s = x * y
 print(s)
 # ================================================
 result = '我' + '和' + '你'
-print(result)  #输出我和你
+print(result)  # 输出我和你
 # ================================================
 a, b, c = 1, 2, 'jojo'
 print(a, b, c)
 # ================================================
-str = '你好啊，外邦的旅客！'
-print(str)
-print(str[0])
-print(str[1])
-print(str[2:5])
-print(str[2:])
-print(str * 2)
-print(str + "end")
-print(str[:7])
+stir = '你好啊，外邦的旅客！'
+print(stir)
+print(stir[0])
+print(stir[1])
+print(stir[2:5])
+print(stir[2:])
+print(stir * 2)
+print(stir + "end")
+print(stir[:7])
 # ===============================================
-list = ['What can I say?', 786, 2.23, 'jojo', 70.2]
-tinylist = [123, 'jojo']
-print(list)
-print(list[0])
-print(list[1:3])
-print(list[2:])
-print(tinylist * 2)
-print(list + tinylist)
+lisut = ['What can I say?', 786, 2.23, 'jojo', 70.2]
+tinylisut = [123, 'jojo']
+print(lisut)
+print(lisut[0])
+print(lisut[1:3])
+print(lisut[2:])
+print(tinylisut * 2)
+print(lisut + tinylisut)
 # ===============================================
-dict = {}
-dict['我来助你！'] = "广智救我！"
-dict['出门撞大运'] = "新年快乐！"
+# dicat = {}
+dicat['我来助你！'] = "广智救我！"
+dicat['出门撞大运'] = "新年快乐！"
 
-tinydict = {'米饭仙人': '风灵月影', '刚满18岁': 114514, '我这一生如履薄冰': '菜就多练'}
+tinydicat = {'米饭仙人': '风灵月影', '刚满18岁': 114514, '我这一生如履薄冰': '菜就多练'}
 
-print(dict['我来助你！'])  #字典中的键值对
-print(dict['出门撞大运'])  #字典中的键值对
-print(tinydict)  #字典中的键值对
-print(tinydict.keys())  #字典的键
-print(tinydict.values())  #字典的值
-print(tinydict.items())  #字典的键值对
-print(dict.items())  #字典的键值对
-print(dict.keys())  #字典的键
-print(dict.values())  #字典的值
+print(dicat['我来助你！'])  # 字典中的键值对
+print(dicat['出门撞大运'])
+print(tinydicat)  # 字典中的键值对
+print(tinydicat.keys())  # 字典的键
+print(tinydicat.values())  # 字典的值
+print(tinydicat.items())  # 字典的键值对
+print(dicat.items())  # 字典的键值对
+print(dicat.keys())  # 字典的键
+print(dicat.values())  # 字典的值
 
 # ===============================================
-#!/usr/bin/python
+# !/usr/bin/python
 # -*- coding: UTF-8 -*-
 
 a = 21
@@ -183,72 +184,72 @@ if b >= a:
 else:
     print("7 - b 小于 a")
 # ======================================
-#!/usr/bin/python
+# !/usr/bin/python
 # -*- coding: UTF-8 -*-
 
 a = '就凭你也配直视我！'  #神
 b = '把头低下！'  #精
-list = ['诶呀', '真的是你呀', '哈哈', '嗐呦', 'baby'];  #练习生
+lisut = ['诶呀', '真的是你呀', '哈哈', '嗐呦', 'baby']  # 练习生
 
-if (a in list):  #如果，“神”在“练习生”里。就告诉你，勇敢去做，否则，没有不可能
-    print("勇敢去做")  #对
-else:  #不
-    print("没有不可能")  #对
+if a in list:  # 如果，“神”在“练习生”里。就告诉你，勇敢去做，否则，没有不可能
+    print("勇敢去做")  # 对
+else:  # 不
+    print("没有不可能")  # 对
 
-if (b not in list):  #如果“神精”在“练习生”里，就偷懒
-    print("2 - 变量 b 不在给定的列表中 list 中")  #懒
-else:  #否则
-    print("2 - 变量 b 在给定的列表中 list 中")  #偷
+if b not in list:  # 如果“神精”在“练习生”里，就偷懒
+    print("2 - 变量 b 不在给定的列表中 list 中")  # 懒
+else:  # 否则
+    print("2 - 变量 b 在给定的列表中 list 中")  # 偷
 
 # 修改变量 a 的值
-a = '真的是你呀'  #练习时长两年半
-if (a in list):  #如果你有两年半的练习
-    print("3 - 变量 a 在给定的列表中 list 中")  #你就练习了两年半
-else:  #杂鱼
-    print("3 - 变量 a 不在给定的列表中 list 中")  #错过就是失去，你明白了吗。
+a = '真的是你呀'  # 练习时长两年半
+if a in list:  # 如果你有两年半的练习
+    print("3 - 变量 a 在给定的列表中 list 中")  # 你就练习了两年半
+else:  # 杂鱼
+    print("3 - 变量 a 不在给定的列表中 list 中")  # 错过就是失去，你明白了吗。
 # ===========================================================================
-#!/usr/bin/python
+# !/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-a = 20  #变量为20
-b = 10  #变量为10
-c = 15  #变量为15
-d = 5  #变量为5
-e = 0  #变量为0
+a = 20  # 变量为20
+b = 10  # 变量为10
+c = 15  # 变量为15
+d = 5  # 变量为5
+# e = 0  # 变量为0
 
 e = (a + b) * c / d  # ( 30 * 15 ) / 5
-print("(a + b) * c / d 运算结果为：", e)  #输出上面的式子
+print("(a + b) * c / d 运算结果为：", e)  # 输出上面的式子
 
 e = ((a + b) * c) / d  # (30 * 15 ) / 5
-print("((a + b) * c) / d 运算结果为：", e)  #费手
+print("((a + b) * c) / d 运算结果为：", e)  # 费手
 
-e = (a + b) * (c / d);  # (30) * (15/5)
-print("(a + b) * (c / d) 运算结果为：", e)  #一对对照组
+e = (a + b) * (c / d)  # (30) * (15/5)
+print("(a + b) * (c / d) 运算结果为：", e)  # 一对对照组
 
-e = a + (b * c) / d;  # 20 + (150/5)
-print("a + (b * c) / d 运算结果为：", e)  #看，电灯泡
+e = a + (b * c) / d  # 20 + (150/5)
+print("a + (b * c) / d 运算结果为：", e)  # 看，电灯泡
 # =======================================================
-#!/usr/bin/python
+# !/usr/bin/python
 
-count = 0  #设定函数值为0
-while (count < 9):  #在当函数值小于9的条件下循环输出以下内容
-    print('The count is:', count)  #输出，包含下一个变量
-    count = count + 1  #每一次循环都加1
+count = 0  # 设定函数值为0
+while count < 9:  # 在当函数值小于9的条件下循环输出以下内容
+    print('The count is:', count)  # 输出，包含下一个变量
+    count = count + 1  # 每一次循环都加1
 
-print("Good bye!")  #不成熟的解释
+print("Good bye!")  # 不成熟的解释
 # =========================================
-#!/usr/bin/python
+# !/usr/bin/python
 # -*- coding: UTF-8 -*-
 
 var = 1
 while var == 1:  # 该条件永远为true，循环将无限执行下去
-    num = input("随便 :")  #随便写一个，回车
-    print("写了个寂寞: ", num)  #输出你刚刚写下的东西
+    num = input("随便 :")  # 随便写一个，回车
+    print("写了个寂寞: ", num)  # 输出你刚刚写下的东西
     if num == '1314':  # 当你输入一生一世时，循环终止
         break
-print("拜拜!")  #友好的再见
+print("拜拜!")  # 友好的再见
 # =======================================
-#!/usr/bin/python
+# !/usr/bin/python
 
 count = 0
 while count < 5:
@@ -257,7 +258,9 @@ while count < 5:
 else:
     print(count, " is not less than 5")
 # ==========================================
-#!/usr/bin/python
+# !/usr/bin/python
+
+
 import time
 
 keep_running = True
@@ -272,7 +275,7 @@ while keep_running:
 
 print("Good bye!")
 # ===================================================
-#!/usr/bin/python
+# !/usr/bin/python
 # -*- coding: UTF-8 -*-
 
 for letter in '一个字，绝':  # 第一个实例
@@ -284,7 +287,7 @@ for fruit in fruits:  # 第二个实例
 
 print("baybay!")
 # ==================================================
-#!/usr/bin/python
+# !/usr/bin/python
 # -*- coding: UTF-8 -*-
 
 fruits = ['鸡', '你', '太美']
@@ -293,7 +296,7 @@ for index in range(len(fruits)):
 
 print("beybey!")
 # ====================================================
-#!/usr/bin/python
+# !/usr/bin/python
 # -*- coding: UTF-8 -*-
 
 for num in range(10, 20):  # 迭代 10 到 20 (不包含) 之间的数字,简单来说就是10~19
@@ -309,17 +312,17 @@ for num in range(10, 20):  # 迭代 10 到 20 (不包含) 之间的数字,简单
 # -*- coding: UTF-8 -*-
 
 i = 2
-while (i < 100):
+while i < 100:
     j = 2
-    while (j <= (i / j)):
+    while j <= (i / j):
         if not (i % j): break
         j = j + 1
-    if (j > i / j): print(i, " 是素数")
+    if j > i / j: print(i, " 是素数")
     i = i + 1
 
 print("Good bye!")
 # ==============================================
-apple = 'eat'  #吃苹果
+apple = 'eat'  # 吃苹果
 kill = 'eat'  # 修正了这里，将 kill 的值改为 'eat'
 I = 'you'
 kiss = 'you'
@@ -343,56 +346,56 @@ elif apple == kiil and I != kiss:
 # ========================================================
 a = input("第一个数字：")
 b = input("第二个数字：")
-# print(type(a))#查看变量类型
+# print(type(a))  # 查看变量类型
 a = int(a)
 b = int(b)
 # print(type(a))
 print(a + b)
 # ================================
-money = int(input("交出你的money，哈哈哈: "))  #要钱
+money = int(input("交出你的money，哈哈哈: "))  # 要钱
 if money >= 500:
-    print("太好啦，是钱，我们有救了！")  #太好了，是甲方
+    print("太好啦，是钱，我们有救了！")  # 太好了，是甲方
 else:
-    print("太好了，让我们进入米奇妙妙屋。")  #（勉强的笑容）
+    print("太好了，让我们进入米奇妙妙屋。")  # （勉强的笑容）
 if money >= 1000:
-    if money > 1000 and money < 5000:
-        print('加油加油！')  #厉害了我的哥
+    if 1000 < money < 5000:
+        print('加油加油！')  # 厉害了我的哥
     elif money == 1000:
-        print('有所懈怠了呀。')  #基本满足
+        print('有所懈怠了呀。')  # 基本满足
     if money == 1000:
-        print('刚刚好，是不是故意的？')  #黑暗森林，有着猜疑链
-if money >= 500 and money <= 1000:
+        print('刚刚好，是不是故意的？')  # 黑暗森林，有着猜疑链
+if 500 <= money <= 1000:
     if money == 500:
-        print('回家吧，你也不希望在外面出丑吧？')  #可以吃饭
+        print('回家吧，你也不希望在外面出丑吧？')  # 可以吃饭
     if money == 1000:
-        print('不是故意的，就是有意的！')  #自问自答
-    if money > 500 and money < 1000:
-        print('你的想法真是让人捉摸不透啊！')  #呀呀呀呀
+        print('不是故意的，就是有意的！')  # 自问自答
+    if 500 < money < 1000:
+        print('你的想法真是让人捉摸不透啊！')  # 呀呀呀呀
     else:
-        print('嘿，你瞅啥呢，我是你蝶！')  #哎呀呀
+        print('嘿，你瞅啥呢，我是你蝶！')  # 哎呀呀
 # ================================================
 a = int(input("来来来（数字，不要提前回车）："))
 b = 0
-while b <= 100:  #用while循环100次，哈哈哈
+while b <= 100:  # 用while循环100次，哈哈哈
     print(a)
     b += 1
     a += b
     print(b)
-    a -= b  #还是徒劳吗？
+    a -= b  # 还是徒劳吗？
     # break 用break直接结束循环
 # ====================================时间戳的运用示例
 import time
 
 # 获取当前时间戳（秒级时间戳）
 timestamp = time.time()
-print("当前时间戳（秒）:", timestamp)  #时间戳的英文
+print("当前时间戳（秒）:", timestamp)  # 时间戳的英文
 
 # 获取当前时间戳（毫秒级时间戳）
 timestamp_ms = int(round(time.time() * 1000))
-print("当前时间戳（毫秒）:", timestamp_ms)  #横杠加ms
+print("当前时间戳（毫秒）:", timestamp_ms)  # 横杠加ms
 
 import time
-from datetime import datetime  #运用了时间数据
+from datetime import datetime  # 运用了时间数据
 
 # 将秒级时间戳转换为日期时间
 timestamp = time.time()
@@ -579,26 +582,26 @@ s = "这是真的啊，你不会忘了吧？"
 for i in s:
     print("这一次，请确定:", i)
 
-for i in range(10):  #从0数到10，但不包含10
+for i in range(10):  # 从0数到10，但不包含10
     print(i)
 
-for i in range(3, 10):  #3~9
+for i in range(3, 10):  # 3~9
     print(i)
 
 i = 1
-while i <= 10:  #成立
+while i <= 10:  # 成立
     print(i)
-    i += 2  #由i = i + 2
+    i += 2  # 由i = i + 2简化而来
 
-for i in range(1, 10, 2):  #1~9,跳过2
-    print(i)  #就是只输出1 3 5 7 9
+for i in range(1, 10, 2):  # 1~9,跳过2
+    print(i)  # 就是只输出1 3 5 7 9
 
 x = 10
 if x > 5:
-    pass  #跳过，下次想好了再补充
+    pass  # 跳过，下次想好了再补充
 print("吹牛逼呢，见过吗，这叫俄罗斯大贝塔，你就只能看着我骑")
 # ============================================================
-import time  #使用标志变量 + 时间戳（无需多线程）
+import time  # 使用标志变量 + 时间戳（无需多线程）
 
 start_time = time.time()
 timeout = 5  # 5秒后停止
@@ -609,11 +612,11 @@ while True:
     time.sleep(1)  # 模拟操作耗时
 
     # 检查是否超时
-    if time.time() - start_time > timeout:  #用现在比较过去，你还会犹豫吗？
+    if time.time() - start_time > timeout:  # 用现在比较过去，你还会犹豫吗？
         print("已超时，停止循环")
         break
 
-import time  #使用多线程 + 定时器（精确控制）
+import time  # 使用多线程 + 定时器（精确控制）
 import threading
 
 # 控制循环运行的标志
@@ -639,7 +642,7 @@ print("循环已结束")
 # ===========================================================
 # int:整数，可以进行整数之间的加减乘除，以及比较大小
 # 比如：
-a = 10
+"""a = 10
 b = 15
 print(a + b)
 print(a - b)
@@ -662,13 +665,40 @@ a = 10.57
 print(a)
 # 但是，有一个无限小数点
 # 比如：
-print(10 / 3)  #它的输出的最后一位存在误差，说明关于无穷，计算机也是只能给出不准确的数
-#还有，小数的数据范围是无限的，而整数会在某一个特定区间内是可以清楚表示的
-#就像你与你命中注定的人的距离，处于小数时，距离是可以无限近和无限远的。但是，处于整数时，在一瞬间，你们两个的关系就明确了
-#计算机是一款二进制产品，语言基础就：0,1，人家本来就难，不要强迫别人，所以，计算机在表示一个小数时是会有误差的
-bool
-#===============================================================
-#蛊界的那些事
+print(10 / 3)  # 它的输出的最后一位存在误差，说明关于无穷，计算机也是只能给出不准确的数
+# 还有，小数的数据范围是无限的，而整数会在某一个特定区间内是可以清楚表示的
+# 就像你与你命中注定的人的距离，处于小数时，距离是可以无限近和无限远的。但是，处于整数时，在一瞬间，你们两个的关系就明确了
+# 计算机是一款二进制产品，语言基础就：0,1，人家本来就难，不要强迫别人，所以，计算机在表示一个小数时是会有误差的
+# bool : 用来做条件判断的，取值范围只有 True 和 False ，基础数据类型之间的转换
+a = "10"  # 字符串
+print(type(a))
+b = int(b)
+print(type(b))
+a = 0        # 在python中，所有的非零的数字都是 Ture，零是 False
+b = bool(a)
+print(type(b))
+print(b)
+
+while a:     # 无限循环,恒为真
+    print("你好吗？我吃柠檬！")
+
+s = ""    # 在python中，所有的非空字符串都是 Ture，空字符串是 False
+print(bool(s))"""
+
+# # 综上，在python中，表示空的东西都是False，不空的东西都是True
+# lst = [0]
+# print(bool(lst))
+
+
+# while 1:
+#     content = input("请输入你想要的内容：")
+#     if content:
+#         print("你要发给某人的内容：", content)
+#     else:
+#         break
+
+# ===============================================================
+# 蛊界的那些事
 import time
 
 血颅蛊 = '众人所望'
@@ -759,60 +789,60 @@ print('''女童：哎呀，我的玩具
 import turtle
 
 # 设置屏幕
-screen = turtle.Screen()  #screen是变量
-screen.setup(600, 400)  #设置屏幕大小
-screen.bgcolor("red")  #设置背景颜色
+screen = turtle.Screen()  # screen是变量
+screen.setup(600, 400)  # 设置屏幕大小
+screen.bgcolor("red")  # 设置背景颜色
 
 # 创建画笔
-pen = turtle.Turtle()  #pen是变量
-pen.speed(10)  #设置画笔速度为10
-pen.penup()  #设置画笔抬起
+pen = turtle.Turtle()  # pen是变量
+pen.speed(10)  # 设置画笔速度为10
+pen.penup()  # 设置画笔抬起
 
 
 # 绘制大五角星
 def draw_star(x, y, size):
-    #定义函数draw_star,def是声明后方的代码是函数
-    pen.goto(x, y)  #设置画笔位置为x,y
-    pen.pendown()  #设置画笔落下
-    pen.color("yellow")  #设置画笔颜色为黄色
-    pen.begin_fill()  #开始填充
-    for _ in range(5):  #循环五次
-        pen.forward(size)  #画笔向前移动size
-        pen.right(144)  #设置画笔向右旋转144度
-    pen.end_fill()  #结束填充
-    pen.penup()  #设置画笔抬起
+    # 定义函数draw_star,def是声明后方的代码是函数
+    pen.goto(x, y)  # 设置画笔位置为x,y
+    pen.pendown()  # 设置画笔落下
+    pen.color("yellow")  # 设置画笔颜色为黄色
+    pen.begin_fill()  # 开始填充
+    for _ in range(5):  # 循环五次
+        pen.forward(size)  # 画笔向前移动size
+        pen.right(144)  # 设置画笔向右旋转144度
+    pen.end_fill()  # 结束填充
+    pen.penup()  # 设置画笔抬起
 
 
 # 绘制大五角星
-draw_star(-200, 100, 100)  #调用函数draw_star
+draw_star(-200, 100, 100)  # 调用函数draw_star
 
 
 # 绘制四个小五角星
 def draw_small_star(x, y, size, angle):
-    #定义函数draw_small_star
-    pen.goto(x, y)  #设置画笔位置为x,y
-    pen.setheading(angle)  #设置画笔朝向angle度
-    pen.pendown()  #设置画笔落下
-    pen.color("yellow")  #设置画笔颜色为黄色
-    pen.begin_fill()  #开始填充
-    for _ in range(5):  #循环五次
-        pen.forward(size)  #设置画笔向前移动size
-        pen.right(144)  #设置画笔向右旋转144度
-    pen.end_fill()  #结束填充
-    pen.penup()  #设置画笔抬起
+    # 定义函数draw_small_star
+    pen.goto(x, y)  # 设置画笔位置为x,y
+    pen.setheading(angle)  # 设置画笔朝向angle度
+    pen.pendown()  # 设置画笔落下
+    pen.color("yellow")  # 设置画笔颜色为黄色
+    pen.begin_fill()  # 开始填充
+    for _ in range(5):  # 循环五次
+        pen.forward(size)  # 设置画笔向前移动size
+        pen.right(144)  # 设置画笔向右旋转144度
+    pen.end_fill()  # 结束填充
+    pen.penup()  # 设置画笔抬起
 
 
 # 绘制四个小五角星
-draw_small_star(-100, 160, 30, 30)  #调用函数draw_small_star
-draw_small_star(-60, 120, 30, 0)  #调用函数draw_small_star
-draw_small_star(-60, 60, 30, -30)  #调用函数draw_small_star
-draw_small_star(-100, 20, 30, -60)  #调用函数draw_small_star
+draw_small_star(-100, 160, 30, 30)  # 调用函数draw_small_star
+draw_small_star(-60, 120, 30, 0)  # 调用函数draw_small_star
+draw_small_star(-60, 60, 30, -30)  # 调用函数draw_small_star
+draw_small_star(-100, 20, 30, -60)  # 调用函数draw_small_star
 
 # 隐藏画笔
 pen.hideturtle()
 
 # 结束
-turtle.done()  #阻塞程序并保持窗口打开，直到用户手动关闭
+turtle.done()  # 阻塞程序并保持窗口打开，直到用户手动关闭
 # turtle.mainloop()
 # ===============================================================
 # from turtle import*#可以不用导入，直接用turtle
@@ -823,7 +853,7 @@ import time as ti
 '''t.speed(0)    # 设置最快速度
 t.tracer(0)   # 关闭自动刷新
 # ==================================
-#四个圆
+# 四个圆
 a = 1
 while a <= 4:
     t.circle(100)
@@ -836,19 +866,19 @@ ti.sleep(5)    # 保持窗口显示（可选）
 # t.circle(100)
 # t.left(180)
 # ===================================
-#球
+# 球
 for i in range(100):
     t.circle(100)
     t.right(91)
 t.done()
 # ===================================
-#四方相回
+# 四方相回
 for i in range(100):
     t.circle(i)
     t.right(91)
 t.done()
 # ==================================
-#彩色的圆
+# 彩色的圆
 for i in range(100):
     t.circle(i)
     t.right(91)
@@ -863,7 +893,7 @@ for i in range(100):
     t.color("white")
 t.done()
 # ==================================
-#不好看
+# 不好看
 import turtle as t
 
 # 颜色配置优化方案
@@ -871,14 +901,14 @@ colors = ["red", "orange", "yellow", "green", "blue", "purple", "pink"]
 t.speed(0)  # 设置最快绘制速度
 
 for i in range(100):
-    # 通过取余实现颜色循环
+      # 通过取余实现颜色循环
     t.color(colors[i % len(colors)])
     t.circle(i)
     t.right(91)
 
 t.done()
 # ==================================
-#好看吗？
+# 好看吗？
 import turtle as t
 import random
 
@@ -887,7 +917,7 @@ t.colormode(255)  # 必须设置颜色模式
 t.speed(0)
 
 for i in range(100):
-    # 生成随机RGB颜色
+      # 生成随机RGB颜色
     r = random.randint(0, 255)
     g = random.randint(0, 255)
     b = random.randint(0, 255)
@@ -898,13 +928,13 @@ for i in range(100):
 
 t.done()
 # ==================================
-#蓝球
+# 蓝球
 t.color('blue')
 for i in range(100):
     t.circle(i)
     t.right(78)
 # ==================================
-#奥运五环
+# 奥运五环
 t.pensize(9)
 
 t.color('black')
@@ -941,7 +971,7 @@ t.pendown()
 t.write('北京 2020',font=('kaiti',32))
 t.hideturtle()
 # ==================================
-#美国盾牌
+# 美国盾牌
 t.penup()
 t.goto(0,-200)
 t.pendown()
@@ -990,16 +1020,16 @@ t.end_fill()
 
 t.hideturtle()
 # =================================
-#彩球飘飘
+# 彩球飘飘
 
-#随机数
+# 随机数
 import random
 
 t.colormode(255)
 t.speed(0)
 
 for i in range(20):
-    red = random.randint(0,255)#在这里调颜色
+    red = random.randint(0,255)  # 在这里调颜色
     green = red = random.randint(0,255)
     blue = red = random.randint(0,255)
 
@@ -1020,9 +1050,9 @@ for i in range(20):
     t.forward(30)
     t.left(90)
 t.done()
-#RGB red green blue
-#==================================
-#繁星满天
+# RGB red green blue
+# ==================================
+# 繁星满天
 import random
 t.bgcolor('black')
 
@@ -1073,7 +1103,38 @@ if 1 <= mc <= 6:
 else:
     print('输入错误，不在1~6内！')
 # ===================================
-#不计分
+# 1. 字符串格式化
+# 我叫xxx，我住在xxx，我今年xxx岁，我的爱好是xxx
+name = input("请输入你的名字：")
+address = input("请输入你的地址：")
+age = int(input("请输入你的年龄："))
+hobby = input("请输入你的爱好：")
+
+# %s 字符串占位（也可以表示整数和小数，也可以说是万能的）
+# %d 整数占位
+# %f 浮点数占位（简单来说就是小数占位）
+s = "我叫%s，我住在%s，我今年%d岁，我的爱好是%s" % (name, address, age, hobby)  # 这个占位符的方法是不是很麻烦？
+s0 = "我叫%s" % name  # 当只有一个占位符的时候，这个方法就比较方便了
+s1 = "我叫{0}，我住在{1}，我今年{2}岁，我的爱好是{3}".format(name, address, age, hobby)  # 这两种方法是不是还是很麻烦？看下面这个
+s2 = f"我叫{name}，我住在{address}，我今年{age}岁，我的爱好是{hobby}"  # f-string在python 3.6以上引用了这个简化方法
+print(s)
+print(s0)
+print(s1)
+print(s2)
+# 2. 索引和切片
+# 索引：按照位置提取元素
+s = "我叫周杰伦"
+# 可以采用索引的方式提取某一个元素（文字）
+print(s[3])  # 索引都是从0开始数数
+print(s[0])
+print(s[-1])  # “-”表示从后往前数（倒数）
+
+# 切片：从一个字符串中提取一部分内容（断章取义）
+s = "我叫周杰伦，你呢？你叫周润发吗？"
+
+print(s[3:6])  # 从索引3位置进行切片，切到6结束，有一个坑：切片取不到第二个位置的元素。
+# ===================================
+# 不计分
 import pygame
 import math
 import random
@@ -1253,7 +1314,7 @@ while True:
     pygame.draw.circle(screen, "yellow", yellow_pos, BALL_RADIUS)
     pygame.display.flip()
     clock.tick(60)
-#=======================================================================================================================
+# =======================================================================================================================
 # 计分
 import pygame
 import math
