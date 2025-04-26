@@ -340,7 +340,7 @@ if apple == kill and I == kiss:
 谁给你一袋米呦（让世界感受痛苦），
 行了添水 / 辛辣天森 / 心累天塞（神罗天征）！'''
     )
-elif apple == kiil and I != kiss:
+elif apple == kill and I != kiss:
     print('一袋米引发的战争')
 '''试了三次啊，三次，终于成功了'''
 # ========================================================
@@ -701,75 +701,82 @@ print(bool(s))"""
 # 蛊界的那些事
 import time
 
-血颅蛊 = '众人所望'
-方源 = '哭泣'
-if 血颅蛊 == '众人所望':
-    print('古月族长：')
-    print('''方源，你不要再妇人之仁了。
+# 定义对话内容的字典
+dialogues = {
+    "blood_skull_gu": {
+        "condition": "众人所望",
+        "content": '''古月族长：
+方源，你不要再妇人之仁了。
 快对我们使用血颅蛊，
 再晚就来不及了，
 你难道要看着我们古月一族，
-彻底消失吗？''')
-    time.sleep(1)
-if 方源 == '哭泣':
-    print('方源：')
-    print('''不，族长爷爷，
+彻底消失吗？'''
+    },
+    "fang_yuan_crying": {
+        "condition": "哭泣",
+        "content": '''方源：
+不，族长爷爷，
 我不能这样，
 我不能这样！
-我要陪你们一起战斗，我们还有希望的！''')
-    time.sleep(1)
-if 血颅蛊 == '众人所望' and 方源 == '哭泣':
-    print('古月族长：')
-    print('''没有机会了。
+我要陪你们一起战斗，我们还有希望的！'''
+    },
+    "combined_dialogue": {
+        "condition": ("众人所望", "哭泣"),
+        "content": '''古月族长：
+没有机会了。
 吐血；
 古月方源，
 我以古月一族之长的身份命令你
 咳血*2；
 立刻使用血颅蛊，活下去...重振我古月一族
-否则，你再也不是我古月一族之人！''')
-    time.sleep(0.5)
-    print('方源爆发：')
-    print('''族长爷爷，族人们，
+否则，你再也不是我古月一族之人！
+
+方源爆发：
+族长爷爷，族人们，
 你们放心，我一定会重振古月一族的辉煌，
 我会为你们报仇，还要从仙鹤门手中救出弟弟
-仙鹤门，我古月方源对天发誓，有朝一日，定让你们鸡犬不留...''')
-    time.sleep(1)
-蛊真人 = '方源诵诗'
-if 蛊真人 == '方源诵诗':
-    print('''落魄谷中寒风吹，春秋蝉鸣少年归。
-荡魂山处石人泪，定仙游走魔向北。
+仙鹤门，我古月方源对天发誓，有朝一日，定让你们鸡犬不留...'''
+    },
+    "gu_zhen_ren": {
+        "condition": "方源诵诗",
+        "content": '''落魄谷中寒风吹，春秋蝉鸣少年归。
+荡魂深处石人泪，定仙游走魔向北。
 逆流河上万仙退，爱情不敌坚持泪。
-宿命中成命中败，仙尊悔，而我不悔！''')
-    time.sleep(1)
-方源 = '历史，如果有用还要我有什么用！！！'
-if 方源 == '历史，如果有用还要我有什么用！！！':
-    print('10岁', '青梅竹马，献祭自己，为主角增长修为 三转',
-          '\n15岁', '全族为了保住家族火种，强行为主角提升资质，甲等',
-          '\n18岁', '为保护八十八角真阳楼，无奈放弃前途成仙，',
-          '\n20岁', '被尊者作为蛊虫实验品，天妒',
-          '\n25岁', '被双尊合力打杀，弥留之际，光阴长河中传来一句诛心之言',
-          '\n你... 可曾有一丝后悔',
-          '\n少年微笑' + ' 不过是些许风霜罢了' + ' 维护他人，无悔'
-                                                 '\n顷刻间，尊者，成', )
-print('为什么都说' + ' 白凝冰' + ' 实际上才是蛊真人笔下的第一女主呢？',
-      '\n因为她说：',
-      '\n这个蛊界好不公平',
-      '我陪你从古月山寨一直走到了三王山，'
-      '见证你以蛊师之身，'
-      '练出了六转仙蛊，'
-      '可是几年后出现的星宿仙尊，'
-      '却轻易地夺走了那个最好的你，'
-      '未来会更好的你'
-      '爱情，真的要这么毫无道理吗？'
-      '对于蛊界，你是冷酷残忍的炼天魔尊，'
-      '但是对我来说，你就是那个只为造福世界，恢复五域和谐的大爱仙尊啊！',
-      '''4月23，和方源一起吃冰淇淋，甜甜的很好吃，方源还帮我擦嘴
+宿命中成命中败，仙尊悔，而我不悔！'''
+    },
+    "fang_yuan_history": {
+        "condition": "历史，如果有用还要我有什么用！！！",
+        "content": [
+            ('10岁', '青梅竹马，献祭自己，为主角增长修为 三转'),
+            ('15岁', '全族为了保住家族火种，强行为主角提升资质，甲等'),
+            ('18岁', '为保护八十八角真阳楼，无奈放弃前途成仙'),
+            ('20岁', '被尊者作为蛊虫实验品，天妒'),
+            ('25岁', '被双尊合力打杀，弥留之际，光阴长河中传来一句诛心之言')
+        ],
+        "conclusion": "你... 可曾有一丝后悔\n少年微笑 不过是些许风霜罢了 维护他人，无悔"
+    },
+    "bai_ning_bing": {
+        "content": '''为什么都说 白凝冰 实际上才是蛊真人笔下的第一女主呢？
+因为她说：
+这个蛊界好不公平
+我陪你从古月山寨一直走到了三王山，
+见证你以蛊师之身，
+练出了六转仙蛊，
+可是几年后出现的星宿仙尊，
+却轻易地夺走了那个最好的你，
+未来会更好的你
+爱情，真的要这么毫无道理吗？
+对于蛊界，你是冷酷残忍的炼天魔尊，
+但是对我来说，你就是那个只为造福世界，恢复五域和谐的大爱仙尊啊！
+
+4月23，和方源一起吃冰淇淋，甜甜的很好吃，方源还帮我擦嘴
 4月24，和方源去商量山，世界最暖和的地方在商家的演武场
 4月25，和方源去三王山，有人在那里炼仙蛊，不知道会是什么呢
 4月26，和方源去天庭，星宿仙尊很可怕，但是有方源在，所以不可怕
-方源最好了，冰冰只爱方源''')
-time.sleep(1)
-print('''女童：哎呀，我的玩具
+方源最好了，冰冰只爱方源'''
+    },
+    "girl_toy_scene": {
+        "content": '''女童：哎呀，我的玩具
 一个女童叫着，在人群中追逐着陀螺，陀螺恰好滚到了方源的脚下，女童也撞到了方源的腿上，跌倒在地
 女童的父亲：诶呀，女儿你都干了什么，冲撞了估摸师大人我们拿什么活命啊？
 女童的父亲连忙赶到，看到方源的服饰，脸色吓得惨白如纸，急忙拉起女童，扑通就跪了下来
@@ -784,7 +791,42 @@ print('''女童：哎呀，我的玩具
 “早岁已知人贪玩，仍许陀螺碰方源。
 飞转缥缈身如燕，翩翩起舞姿无限。
 万念童心未曾泯，生死有命只问天。
-今朝陀出风云起，转蛊转人还转天！”''')
+今朝陀出风云起，转蛊转人还转天！”'''
+    }
+}
+
+
+# 封装打印函数
+def print_with_delay(content, delay=1):
+    try:
+        print(content)
+        time.sleep(delay)
+    except KeyboardInterrupt:
+        print("\n程序被用户中断")
+
+
+# 主逻辑
+if dialogues["blood_skull_gu"]["condition"] == "众人所望":
+    print_with_delay(dialogues["blood_skull_gu"]["content"])
+
+if dialogues["fang_yuan_crying"]["condition"] == "哭泣":
+    print_with_delay(dialogues["fang_yuan_crying"]["content"])
+
+if (dialogues["blood_skull_gu"]["condition"], dialogues["fang_yuan_crying"]["condition"]) == \
+        dialogues["combined_dialogue"]["condition"]:
+    print_with_delay(dialogues["combined_dialogue"]["content"], delay=0.5)
+
+if dialogues["gu_zhen_ren"]["condition"] == "方源诵诗":
+    print_with_delay(dialogues["gu_zhen_ren"]["content"])
+
+if dialogues["fang_yuan_history"]["condition"] == "历史，如果有用还要我有什么用！！！":
+    for age, event in dialogues["fang_yuan_history"]["content"]:
+        print(f"{age} {event}")
+    print(dialogues["fang_yuan_history"]["conclusion"])
+    print_with_delay("顷刻间，尊者，成")
+
+print_with_delay(dialogues["bai_ning_bing"]["content"])
+print_with_delay(dialogues["girl_toy_scene"]["content"])
 # ==============================================================
 import turtle
 
@@ -1102,7 +1144,76 @@ if 1 <= mc <= 6:
     print(f'加{df}分')  # 效果相同，更直观简洁
 else:
     print('输入错误，不在1~6内！')
-# ===================================
+# ====================================
+# 小游戏，随机数模拟色子
+import random
+import time
+
+money = 10000000
+number_of_times = 0
+game_player = 0
+dealer = 0
+while True:
+    while money > 0:
+        number_of_times += 1
+        print(f'第{number_of_times}局\n你的总资产为: {money}元')
+        # time.sleep(2)
+        # 下注金额必须大于0且小于等于玩家的总资产
+        while True:
+            # debt = int(input('请下注: '))
+            debt = random.randint(0, money)
+            print(f'你下注了{debt}元')
+            # time.sleep(2)
+            if 0 < debt <= money:
+                break
+        # 用两个1到6均匀分布的随机数相加模拟摇两颗色子得到的点数
+        first_point = random.randrange(1, 7) + random.randrange(1, 7)
+        print(f'\n玩家摇出了{first_point}点')
+        if first_point == 7 or first_point == 11:
+            print('玩家胜!\n')
+            money += debt
+            game_player += 1
+        elif first_point == 2 or first_point == 3 or first_point == 12:
+            print('庄家胜!\n')
+            money -= debt
+            dealer += 1
+        else:
+            # 如果第一次摇色子没有分出胜负，玩家需要重新摇色子
+            while True:
+                current_point = random.randrange(1, 7) + random.randrange(1, 7)
+                print(f'玩家摇出了{current_point}点')
+                if current_point == 7:
+                    print('庄家胜!\n')
+                    money -= debt
+                    dealer += 1
+                    break
+                elif current_point == first_point:
+                    print('玩家胜!\n')
+                    money += debt
+                    game_player += 1
+                    break
+    print(f'你破产了, 游戏结束!\n已自动进行了{number_of_times}局游戏\n你胜利了{game_player}局, 失败了{dealer}局')
+    anan = input('是否继续游戏(an): ')
+    if anan == 'an':
+        money = 10000000
+        number_of_times = 0
+        game_player = 0
+        dealer = 0
+    else:
+        break
+
+# ====================================
+import random
+
+counters = [0] * 6
+# 模拟掷色子记录每种点数出现的次数
+for _ in range(6000):
+    face = random.randrange(1, 7)
+    counters[face - 1] += 1
+# 输出每种点数出现的次数
+for face in range(1, 7):
+    print(f'{face}点出现了{counters[face - 1]}次')
+# ====================================
 # 1. 字符串格式化
 # 我叫xxx，我住在xxx，我今年xxx岁，我的爱好是xxx
 name = input("请输入你的名字：")
@@ -1133,6 +1244,24 @@ print(s[-1])  # “-”表示从后往前数（倒数）
 s = "我叫周杰伦，你呢？你叫周润发吗？"
 
 print(s[3:6])  # 从索引3位置进行切片，切到6结束，有一个坑：切片取不到第二个位置的元素。
+# 语法：s[start:end] 从start到end进行切片，但不包含end位置[start, end)
+print(s[0:5])
+print(s[:5])  # 如果start是从开头进行切片，可以省略不写
+print(s[6:])  # 从start位置进行切片，到结尾进行切片，可以省略end
+# : 如果左右两端有空白，则表示从开头或到结尾
+print(s[:])
+
+print(s[-3:-1])  # 目前还只能从左往右切片
+print(s[-1:-3])  # 没结果，因为切片是左闭右开，所以这里又是坑！
+
+s = "我爱你"
+# 可以给切片添加步长来控制切片的方向
+print(s[::-1])  # -1表示倒着切片，从后往前，从0开始，到-1结束，步长为-1，所以是倒着切片
+# 语法：s[start:end:step] 从start位置开始切片，到end结束，步长为step
+
+s = "abcdefghijklmnopqrstuvwxyz"
+print(s[2:11:3])
+print(s[-1:-10:-3])
 # ===================================
 # 不计分
 import pygame
