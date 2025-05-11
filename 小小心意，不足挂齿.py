@@ -1,13 +1,14 @@
+import time
+
 a = 100
 b = 200
 print(a, b, '装逼，我让你飞起来')  # 这是一个简单的代码
-# ================================================
-a = 50
-b = 100
-c = 200
-print(a * b / c)
-print(a + b)
-print("你好，晚上好")
+c = 50
+d = 100
+e = 200
+print(c * d / e)
+print(c + d)
+print("你好啊，晚上好！")
 # ================================================
 print('b')
 print(chr(98))
@@ -17,19 +18,18 @@ print(8)
 print(chr(56))
 print('[')
 print(chr(91))
-# ================================================
 print(ord('你'), ord('好'))
 print(chr(20320), chr(22909))
 # ================================================
-flag = False
-name = 'liunx'
-if name == 'liunx':  # 判断变量是否为 python
-    flag = True  # 条件成立时设置标志为真
+flag = False  # 标记，我是错的
+name = 'liunx'  # 曾经的小企鹅
+if name == 'liunx':  # 判断变量name的值是否等于'liunx'
+    flag = True  # 改成真的
     print('你好啊，新同学！')  # 并输出欢迎信息
 else:
     print(name)  # 条件不成立时输出变量名称
 # ===================================================
-num = 0
+num = 0  # 数字为0
 if num == 3:  # 判断Num的值
     print('boss')
 elif num == 2:
@@ -43,13 +43,13 @@ elif num < 0:  # 值小于零时输出
 else:
     print('roadman')  # 条件不成立时输出
 # ===============================================
-cao = 9
-if 0 <= cao <= 10:  # 判断值是否在0~10之间
-    print('你好，你好，你好！')
+can = 9
+if 0 <= can <= 10:  # 判断值是否在0~10之间
+    print('你好，你好？你好！')
 # 输出结果：我不好
 
-cao = 10
-if 0 > cao > 10:  # 判断值是否在小于0或大于10
+zhe = 10
+if 0 > zhe > 10:  # 判断值是否在小于0或大于10（挺苛刻的）
     print('我上早八')
 else:
     print('宝了个贝的，这是给我干那来了，这还是国内吗？')
@@ -63,24 +63,32 @@ else:
     print('我是丁真，这是我的好朋友芝士雪豹。')
 # 输出结果：嗷呜~ 雪豹别叫!
 # ==============================================
-
 var = 100
 if var == 100:
-    print("太好啦，是烧鸡，我们没救了！")
-    print("心还没有悬着就去世了！")
+    print("太好啦，是烧鸡，我们没救了！"
+          "\n心还没有悬着就去世了！")
 guzhenren = '大专巅峰'
 if guzhenren == '大专巅峰':
     print("“你到底干了什么，你不跟我们干，我们以后怎么赚大钱”室友跺着脚恶狠狠地瞪着他。")
-    print("他淡然一笑“很简单，我进厂不就是了”说完，他的气息不再掩饰，显露而出，大专巅峰！！一瞬间，流水线再次一寂。")
+    print("他淡然一笑“很简单，我进厂不就是了”说完，他的气息不再掩饰，显露而出，大专巅峰！！\n一瞬间，流水线再次一寂。")
+    time.sleep(1)
     print("我乃大专巅峰！何人敢叼我，何人能叼我！他口中低吟道：")
     print("电子厂中寒风吹，流水线上大神归")
+    time.sleep(0.5)
     print("一号工位黑奴泪，褪去校服人向北")
+    time.sleep(0.5)
     print("无休倒班万人退，三千工资空落泪")
+    time.sleep(0.5)
     print("宿命天成当厂妹，本科悔而我不悔!")
+    time.sleep(0.5)
     print("早岁已知挣钱艰，仍许资本荡人间")
+    time.sleep(0.5)
     print("十年苦读身如絮，无尘车间客独行")
+    time.sleep(0.5)
     print("千磨万击手铸铁，殚精竭虑打工件")
+    time.sleep(0.5)
     print("今朝人向工位处，打件打人还打天")
+    time.sleep(0.5)
     print(
         "从今以后，他就彻底从一位学生变成一位打工人，可以堂堂正正的打螺丝，造福车间了，工友们的历史，资本家们的历史不得不记载他的名字，至此他和数百位工友并肩，宛若大日光照千古，其余同学无论多么豪杰英雄，皆为繁星。")
 collegeStudents = '大专生发言'
@@ -95,19 +103,19 @@ print(age)  # 输出你的输入
 x = 10
 y = 5
 s = x * y
-print(s)
+print(s)  # 50
 # ================================================
 result = '我' + '和' + '你'
-print(result)  # 输出我和你
+print(result)  # 输出“我和你”
 # ================================================
-a, b, c = 1, 2, 'jojo'
+a, b, c = 1, 2, 'jojo'  # 我居然忘记了还有这个
 print(a, b, c)
 # ================================================
-stir = '你好啊，外邦的旅客！'
+stir = '你好啊，外邦的旅客！'  # 列表啦！
 print(stir)
-print(stir[0])
+print(stir[0])  # 索引
 print(stir[1])
-print(stir[2:5])
+print(stir[2:5])  # 切片
 print(stir[2:])
 print(stir * 2)
 print(stir + "end")
@@ -139,9 +147,6 @@ print(dicat.keys())  # 字典的键
 print(dicat.values())  # 字典的值
 
 # ===============================================
-# !/usr/bin/python
-# -*- coding: UTF-8 -*-
-
 a = 21
 b = 10
 c = 0
@@ -184,11 +189,8 @@ if b >= a:
 else:
     print("7 - b 小于 a")
 # ======================================
-# !/usr/bin/python
-# -*- coding: UTF-8 -*-
-
-a = '就凭你也配直视我！'  #神
-b = '把头低下！'  #精
+a = '就凭你也配直视我！'  # 神
+b = '把头低下！'  # 精
 lisut = ['诶呀', '真的是你呀', '哈哈', '嗐呦', 'baby']  # 练习生
 
 if a in list:  # 如果，“神”在“练习生”里。就告诉你，勇敢去做，否则，没有不可能
@@ -208,16 +210,12 @@ if a in list:  # 如果你有两年半的练习
 else:  # 杂鱼
     print("3 - 变量 a 不在给定的列表中 list 中")  # 错过就是失去，你明白了吗。
 # ===========================================================================
-# !/usr/bin/python
-# -*- coding: UTF-8 -*-
-
 a = 20  # 变量为20
-b = 10  # 变量为10
-c = 15  # 变量为15
-d = 5  # 变量为5
-# e = 0  # 变量为0
+b = 10  # 10
+c = 15  # 15
+d = 5
 
-e = (a + b) * c / d  # ( 30 * 15 ) / 5
+e = (a + b) * c / d  # ( 20 * 15 ) / 5
 print("(a + b) * c / d 运算结果为：", e)  # 输出上面的式子
 
 e = ((a + b) * c) / d  # (30 * 15 ) / 5
@@ -1216,52 +1214,196 @@ for face in range(1, 7):
 # ====================================
 # 1. 字符串格式化
 # 我叫xxx，我住在xxx，我今年xxx岁，我的爱好是xxx
-name = input("请输入你的名字：")
-address = input("请输入你的地址：")
-age = int(input("请输入你的年龄："))
-hobby = input("请输入你的爱好：")
+# name = input("请输入你的名字：")
+# address = input("请输入你的地址：")
+# age = int(input("请输入你的年龄："))
+# hobby = input("请输入你的爱好：")
 
 # %s 字符串占位（也可以表示整数和小数，也可以说是万能的）
 # %d 整数占位
 # %f 浮点数占位（简单来说就是小数占位）
-s = "我叫%s，我住在%s，我今年%d岁，我的爱好是%s" % (name, address, age, hobby)  # 这个占位符的方法是不是很麻烦？
-s0 = "我叫%s" % name  # 当只有一个占位符的时候，这个方法就比较方便了
-s1 = "我叫{0}，我住在{1}，我今年{2}岁，我的爱好是{3}".format(name, address, age, hobby)  # 这两种方法是不是还是很麻烦？看下面这个
-s2 = f"我叫{name}，我住在{address}，我今年{age}岁，我的爱好是{hobby}"  # f-string在python 3.6以上引用了这个简化方法
-print(s)
-print(s0)
-print(s1)
-print(s2)
+# s = "我叫%s，我住在%s，我今年%d岁，我的爱好是%s" % (name, address, age, hobby)  # 这个占位符的方法是不是很麻烦？
+# s0 = "我叫%s" % name  # 当只有一个占位符的时候，这个方法就比较方便了
+# s1 = "我叫{0}，我住在{1}，我今年{2}岁，我的爱好是{3}".format(name, address, age, hobby)  # 这两种方法是不是还是很麻烦？看下面这个
+# s2 = f"我叫{name}，我住在{address}，我今年{age}岁，我的爱好是{hobby}"  # f-string在python 3.6以上引用了这个简化方法
+# print(s)
+# print(s0)
+# print(s1)
+# print(s2)
 # 2. 索引和切片
 # 索引：按照位置提取元素
-s = "我叫周杰伦"
+# s = "我叫周杰伦"
 # 可以采用索引的方式提取某一个元素（文字）
-print(s[3])  # 索引都是从0开始数数
-print(s[0])
-print(s[-1])  # “-”表示从后往前数（倒数）
+# print(s[3])  # 索引都是从0开始数数
+# print(s[0])
+# print(s[-1])  # “-”表示从后往前数（倒数）
 
 # 切片：从一个字符串中提取一部分内容（断章取义）
-s = "我叫周杰伦，你呢？你叫周润发吗？"
+# s = "我叫周杰伦，你呢？你叫周润发吗？"
 
-print(s[3:6])  # 从索引3位置进行切片，切到6结束，有一个坑：切片取不到第二个位置的元素。
+# print(s[3:6])  # 从索引3位置进行切片，切到6结束，有一个坑：切片取不到第二个位置的元素。
 # 语法：s[start:end] 从start到end进行切片，但不包含end位置[start, end)
-print(s[0:5])
-print(s[:5])  # 如果start是从开头进行切片，可以省略不写
-print(s[6:])  # 从start位置进行切片，到结尾进行切片，可以省略end
+# print(s[0:5])
+# print(s[:5])  # 如果start是从开头进行切片，可以省略不写
+# print(s[6:])  # 从start位置进行切片，到结尾进行切片，可以省略end
 # : 如果左右两端有空白，则表示从开头或到结尾
-print(s[:])
+# print(s[:])
 
-print(s[-3:-1])  # 目前还只能从左往右切片
-print(s[-1:-3])  # 没结果，因为切片是左闭右开，所以这里又是坑！
+# print(s[-3:-1])  # 目前还只能从左往右切片
+# print(s[-1:-3])  # 没结果，因为切片是左闭右开，所以这里又是坑！
 
-s = "我爱你"
+
+# s = "我爱你"
 # 可以给切片添加步长来控制切片的方向
-print(s[::-1])  # -1表示倒着切片，从后往前，从0开始，到-1结束，步长为-1，所以是倒着切片
+# print(s[::-1])  # -1表示倒着切片，从后往前，从0开始，到-1结束，步长为-1，所以是倒着切片
 # 语法：s[start:end:step] 从start位置开始切片，到end结束，步长为step
 
-s = "abcdefghijklmnopqrstuvwxyz"
-print(s[2:11:3])
-print(s[-1:-10:-3])
+# s = "abcdefghijklmnopqrstuvwxyz"
+# print(s[2:11:3])
+# print(s[-1:-10:-3])
+
+
+# 3.字符串的常规操作
+# 字符串的操作一般不会对原字符串产生影响，而是返回一个新的字符串
+# 3.1 字符串大小转换
+# s = "python"
+# s1 = s.capitalize()   # 将字符串的第一个字母大写，其他字母小写
+# print(s1)
+#
+# s = "I have a dream!"
+# s1 = s.title()  # 将字符串中每个单词的第一个字母大写，其他字母小写
+# print(s1)
+#
+# s = "I HAVE A DREAM!"
+# s1 = s.lower()  # 将字符串全部转换为小写
+# print(s1)
+#
+# s = "i have a dream!"
+# s1 = s.upper()  # 将字符串全部转换为大写
+# print(s1)
+
+# 如何忽略大小写来进行判断
+# verify_code = "xAd1"
+# user_input = input(f"请输入验证码({verify_code})：")
+# if user_input.upper() == verify_code.upper():
+#     print("验证码正确")
+# else:
+#     print("验证码错误")
+
+
+# 3.2 替换和切割（*）
+# strip()
+# s = "     你好，   我叫   周杰伦    "
+# s1 = s.strip()
+# print(s1)
+
+# 比如
+# username = input("请输入用户名：")
+# password = input("请输入密码：")
+# if username == "admin" and password == "123456":
+#     print("登录成功")
+# else:
+#     print("登录失败")
+
+# # replace(old, new) 字符串替换
+# s = "你好啊，我叫周杰伦"
+# s1 = s.replace("周", "周杰伦")
+# print(s1)
+#
+# a = "hello i am a good man!"
+# a1 = a.replace(" ", "")  # 去掉所有的空格
+# print(a1)
+#
+# split(用什么切割)  # 字符串切割，用什么切，就会损失掉这个字符
+# a = "python_java_c_c#_javascript"
+# lst = a.split("_")  # 切割之后的结果会放在列表中
+# print(lst)
+# lst = a.split("_java_")
+# print(lst)
+
+# replace(),  split(), strip()     ==> 记住
+
+
+# ===============================================
+# 3.4 查找和判断
+# 查找
+# s = "你好啊，我叫蔡徐坤"
+# ret = s.find("蔡徐坤12312")  # 如果找到了，返回索引，找不到返回-1
+# print(ret)
+# ret = s.index("蔡徐坤")  # 如果找到了，返回索引，找不到会报错
+# print(ret)
+
+# print("蔡徐坤" in s)  # in可以做条件上的判断
+# print("蔡徐坤" not in s)  # not in判断是否不在
+
+# 判断
+# name = input("请输入你的名字：")
+# # 判断你是不是姓张
+# if name.startswith("张"):  # 判断字符串是否以xxxx开头，endswith()判断字符串是否以xxxx结尾
+#     print("你姓张")
+# else:
+#     print("你不姓张")
+#
+
+# money = input("请输入你兜里的钱：")
+#
+# if money.isdigit():  # 判断字符串是否由整数组成
+#     money = int(money)
+#     print("可以花钱了")
+# else:
+#     print("对不起，您输入有误......")
+
+
+# startswith(), endswith(), isdigit(), in, not in, find()
+
+
+# ==================================================
+# 3.5 补充和总结
+# s = "hello"
+# print(len(s))  # length  长度
+#
+# # join()
+# s = "python_java_c_javascript"
+# lst = s.split("_")
+# print(lst)
+#
+# lat = ['赵本山',  '周杰伦', '王力宏']
+# # 用_把上面的人的名字连接起来
+# s = "_".join(lat)
+# print(s)
+
+# 总结：
+"""
+1. f'{变量}' 格式化一个字符串
+2. 索引和切片：
+    索引：从0开始. []
+    切片：s[start:end:step],end位置的数据永远都拿不到
+3. 相关操作:
+    字符串操作对原字符串不会发生改变的。
+    1. upper() 在需要忽略大小写的时候使用
+    2. strip() 可以去掉字符串两边的空白(空格，\t,\n)
+    3. replace(old, new) 字符串替换
+    4. split(sep) 字符串切割，切割之后的结果会放在列表中
+    5. join(sep, ) 拼接一个列表中的内容成为新的字符串
+    6. startswith() 判断字符串是否以xxxx开头
+    7. len(sep) 字符串长度(内置函数)
+
+    字符串的循环和遍历
+    for i in s:
+        print(c)  字符串中的每一个字符串
+
+    关于in:
+        1. 判断xxx是否存在xxx中出现了
+        2. for循环
+
+"""
+
+
+
+
+
+
+
 # ===================================
 # 不计分
 import pygame
