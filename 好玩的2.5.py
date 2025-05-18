@@ -1,4 +1,4 @@
-import time  # 正确导入time模块
+import time
 
 print("闭上眼睛，在心底进行观想")
 time.sleep(2)
@@ -198,7 +198,7 @@ print(
     "她突然想到刚刚感受到的奇怪的记忆，望着白维的背影，只感觉突然间那么的似曾相识，像是另一个人。"
 )
 g = input()
-if g == "怎么了？" and "怎么了":
+if g == "怎么了？" or "怎么了":
     time.sleep(1)
     print("唔，路上小心。")
 time.sleep(2)
