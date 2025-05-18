@@ -1,4 +1,251 @@
 import time
+from turtle import *
+from datetime import datetime, timedelta
+import threading
+import asyncio
+import math  # 移动到这里
+import random  # 移动到这里
+from pygame.math import Vector2
+import pygame
+
+# =======================================================================================================================
+# 计分
+
+# 窗口配置
+SCREEN_WIDTH = 1500
+SCREEN_HEIGHT = 900
+
+# 游戏参数
+game_duration = 60  # Duration in seconds
+player_base_speed = 20
+acceleration_factor = 1.8
+ball_radius = 20
+rebound_coefficient = 0.85
+collision_force = 28
+blue_ball_acceleration = 0.99
+blue_ball_max_speed = 25
+acceleration_threshold = 27  # Frame count, about 0.45 second
+PLAYER_SIZE = 50  # Player size
+SCORE_SMALL = 0.5  # Small collision score
+SCORE_LARGE = 1.0  # Large collision score
+
+pygame.init()
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+clock = pygame.time.Clock()
+# Use Chinese font (ensure the system has SimHei font)
+font = pygame.font.SysFont("SimHei", 36)
+larger_font = pygame.font.SysFont("SimHei", 72, bold=True)
+
+# Game state
+game_running = False
+start_time = 0
+score = 0
+
+# Game objects
+player = pygame.Rect(750, 750, 50, 50)
+blue_ball_pos = Vector2(750, 750)
+blue_ball_velocity = Vector2()
+yellow_ball_pos = Vector2(SCREEN_WIDTH // 2, 200)
+yellow_ball_velocity = Vector2(3, 0)
+
+# Key timers
+key_timer = {pygame.K_UP: 0, pygame.K_DOWN: 0, pygame.K_LEFT: 0, pygame.K_RIGHT: 0}
+
+
+def reset_game():
+    global player, blue_ball_pos, blue_ball_velocity
+    global yellow_ball_pos, yellow_ball_velocity, score
+    global start_time, game_running
+    player = pygame.Rect(750, 750, 50, 50)
+    blue_ball_pos = Vector2(750, 750)
+    random_angle = math.radians(random.uniform(0, 360))
+    blue_ball_velocity = Vector2(15 * math.cos(random_angle), 15 * math.sin(random_angle))
+    yellow_ball_pos = Vector2(SCREEN_WIDTH // 2, 200)
+    yellow_ball_velocity = Vector2(3, 0)
+    score = 0
+    start_time = pygame.time.get_ticks()
+    game_running = True
+
+
+def detect_collision(rect, circle_pos, radius):
+    closest_x = max(rect.left, min(circle_pos.x, rect.right))
+    closest_y = max(rect.top, min(circle_pos.y, rect.bottom))
+    dx = circle_pos.x - closest_x
+    dy = circle_pos.y - closest_y
+    return dx ** 2 + dy ** 2 < radius ** 2
+
+
+def ball_collision_detection(pos1, pos2, radius):
+    return pos1.distance_to(pos2) < radius * 2
+
+
+def handle_boundary(position, velocity, radius):
+    if position.x < radius:
+        position.x = radius
+        velocity.x = abs(velocity.x) * rebound_coefficient
+    elif position.x > SCREEN_WIDTH - radius:
+        position.x = SCREEN_WIDTH - radius
+        velocity.x = -abs(velocity.x) * rebound_coefficient
+
+    if position.y < radius:
+        position.y = radius
+        velocity.y = abs(velocity.y) * rebound_coefficient
+    elif position.y > SCREEN_HEIGHT - radius:
+        position.y = SCREEN_HEIGHT - radius
+        velocity.y = -abs(velocity.y) * rebound_coefficient * 1.2
+    return position, velocity
+
+
+def update_blue_ball_ai():
+    global blue_ball_velocity
+    target_direction = (yellow_ball_pos - blue_ball_pos).normalize()
+    blue_ball_velocity += target_direction * blue_ball_acceleration
+
+    if blue_ball_velocity.magnitude() > blue_ball_max_speed:
+        blue_ball_velocity = blue_ball_velocity.normalize() * blue_ball_max_speed
+    blue_ball_velocity *= 0.99
+
+
+def update_yellow_ball_ai():
+    global yellow_ball_velocity
+    escape_direction = (yellow_ball_pos - player.center).normalize() + (yellow_ball_pos - blue_ball_pos).normalize()
+    escape_direction = escape_direction.normalize()
+
+    if yellow_ball_pos.x < 150 or yellow_ball_pos.x > SCREEN_WIDTH - 150:
+        escape_direction.y += 0.8 * (-1 if yellow_ball_pos.y < SCREEN_HEIGHT / 2 else 1)
+    if yellow_ball_pos.y < 150 or yellow_ball_pos.y > SCREEN_HEIGHT - 150:
+        escape_direction.x += 0.8 * (-1 if yellow_ball_pos.x < SCREEN_WIDTH / 2 else 1)
+
+    yellow_ball_velocity += escape_direction * 0.035
+    if yellow_ball_velocity.magnitude() > 35:
+        yellow_ball_velocity = yellow_ball_velocity.normalize() * 35
+
+
+def draw_interface():
+    if game_running:
+        remaining_time = game_duration - (pygame.time.get_ticks() - start_time) // 1000
+        score_text = font.render(f"分数: {score:.1f}", True, "white")
+        time_text = font.render(f"剩余时间: {remaining_time}秒", True, "white")
+        screen.blit(score_text, (10, 10))
+        screen.blit(time_text, (10, 50))
+    else:
+        screen.fill("black")
+        final_score_text = larger_font.render(f"最终得分: {score:.1f}", True, "yellow")
+        prompt_text = font.render("按回车键重新开始", True, "white")
+        screen.blit(
+            final_score_text,
+            (
+                SCREEN_WIDTH // 2 - final_score_text.get_width() // 2,
+                SCREEN_HEIGHT // 2 - 50,
+            ),
+        )
+        screen.blit(
+            prompt_text,
+            (SCREEN_WIDTH // 2 - prompt_text.get_width() // 2, SCREEN_HEIGHT // 2 + 50),
+        )
+
+
+running = True
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_q:
+                running = False
+            elif event.key == pygame.K_RETURN and not game_running:
+                reset_game()
+
+    if game_running:
+        # Update key timers
+        keys = pygame.key.get_pressed()
+        for key in [pygame.K_UP, pygame.K_DOWN, pygame.K_LEFT, pygame.K_RIGHT]:
+            key_timer[key] = key_timer[key] + 1 if keys[key] else 0
+
+        # Player movement
+        y_speed = player_base_speed
+        x_speed = player_base_speed
+
+        if keys[pygame.K_UP] and key_timer[pygame.K_UP] > acceleration_threshold:
+            y_speed *= acceleration_factor
+        if keys[pygame.K_DOWN] and key_timer[pygame.K_DOWN] > acceleration_threshold:
+            y_speed *= acceleration_factor
+
+        if keys[pygame.K_LEFT] and key_timer[pygame.K_LEFT] > acceleration_threshold:
+            x_speed *= acceleration_factor
+        if keys[pygame.K_RIGHT] and key_timer[pygame.K_RIGHT] > acceleration_threshold:
+            x_speed *= acceleration_factor
+
+        # Use temporary variables to store player coordinates to avoid repeated calculations
+        new_y_position = player.y
+        new_x_position = player.x
+
+        # Calculate new y coordinate, limit within screen range
+        new_y_position -= keys[pygame.K_UP] * y_speed
+        new_y_position = max(0, min(SCREEN_HEIGHT - PLAYER_SIZE, new_y_position))
+
+        # Calculate new x coordinate, limit within screen range
+        new_x_position -= keys[pygame.K_LEFT] * x_speed
+        new_x_position = max(0, min(SCREEN_WIDTH - PLAYER_SIZE, new_x_position))
+
+        # Update player position
+        player.y = new_y_position
+        player.x = new_x_position
+
+        # Update blue ball
+        update_blue_ball_ai()
+        blue_ball_pos += blue_ball_velocity
+        blue_ball_pos, blue_ball_velocity = handle_boundary(blue_ball_pos, blue_ball_velocity, ball_radius)
+
+        # Update yellow ball
+        update_yellow_ball_ai()
+        yellow_ball_pos += yellow_ball_velocity
+        yellow_ball_pos, yellow_ball_velocity = handle_boundary(yellow_ball_pos, yellow_ball_velocity, ball_radius)
+
+        # Collision handling
+        if ball_collision_detection(blue_ball_pos, yellow_ball_pos, ball_radius):
+            try:
+                collision_direction = (yellow_ball_pos - blue_ball_pos).normalize()
+            except ZeroDivisionError:
+                collision_direction = Vector2(1, 0)  # Default direction
+
+            blue_ball_velocity = -collision_direction * collision_force * 0.7
+            yellow_ball_velocity = collision_direction * collision_force * 1.4
+            score += SCORE_SMALL
+
+        if detect_collision(player, yellow_ball_pos, ball_radius):
+            try:
+                direction = (yellow_ball_pos - player.center).normalize()
+            except ZeroDivisionError:
+                direction = Vector2(1, 0)  # Default direction
+
+            yellow_ball_velocity = direction * collision_force * 1.2
+            score += SCORE_LARGE
+
+        if detect_collision(player, blue_ball_pos, ball_radius):
+            try:
+                direction = (blue_ball_pos - player.center).normalize()
+            except ZeroDivisionError:
+                direction = Vector2(1, 0)  # Default direction
+
+            blue_ball_velocity = direction * collision_force * 0.8
+
+        # Check time
+        if (pygame.time.get_ticks() - start_time) // 1000 >= game_duration:
+            game_running = False
+
+    # Render
+    screen.fill("black")
+    if game_running:
+        pygame.draw.rect(screen, "red", player)
+        pygame.draw.circle(screen, "blue", blue_ball_pos, ball_radius)
+        pygame.draw.circle(screen, "yellow", yellow_ball_pos, ball_radius)
+    draw_interface()
+    pygame.display.flip()
+    clock.tick(60)
+
+pygame.quit()
+# ==========================================================================
 
 a = 100
 b = 200
@@ -130,9 +377,7 @@ print(lisut[2:])
 print(tinylisut * 2)
 print(lisut + tinylisut)
 # ===============================================
-# dicat = {}
-dicat['我来助你！'] = "广智救我！"
-dicat['出门撞大运'] = "新年快乐！"
+dicat = {'我来助你！': "广智救我！", '出门撞大运': "新年快乐！"}
 
 tinydicat = {'米饭仙人': '风灵月影', '刚满18岁': 114514, '我这一生如履薄冰': '菜就多练'}
 
@@ -145,7 +390,6 @@ print(tinydicat.items())  # 字典的键值对
 print(dicat.items())  # 字典的键值对
 print(dicat.keys())  # 字典的键
 print(dicat.values())  # 字典的值
-
 # ===============================================
 a = 21
 b = 10
@@ -193,19 +437,19 @@ a = '就凭你也配直视我！'  # 神
 b = '把头低下！'  # 精
 lisut = ['诶呀', '真的是你呀', '哈哈', '嗐呦', 'baby']  # 练习生
 
-if a in list:  # 如果，“神”在“练习生”里。就告诉你，勇敢去做，否则，没有不可能
+if a in lisut:  # 如果，“神”在“练习生”里。就告诉你，勇敢去做，否则，没有不可能
     print("勇敢去做")  # 对
 else:  # 不
     print("没有不可能")  # 对
 
-if b not in list:  # 如果“神精”在“练习生”里，就偷懒
+if b not in lisut:  # 如果“神精”在“练习生”里，就偷懒
     print("2 - 变量 b 不在给定的列表中 list 中")  # 懒
 else:  # 否则
     print("2 - 变量 b 在给定的列表中 list 中")  # 偷
 
 # 修改变量 a 的值
 a = '真的是你呀'  # 练习时长两年半
-if a in list:  # 如果你有两年半的练习
+if a in lisut:  # 如果你有两年半的练习
     print("3 - 变量 a 在给定的列表中 list 中")  # 你就练习了两年半
 else:  # 杂鱼
     print("3 - 变量 a 不在给定的列表中 list 中")  # 错过就是失去，你明白了吗。
@@ -227,76 +471,47 @@ print("(a + b) * (c / d) 运算结果为：", e)  # 一对对照组
 e = a + (b * c) / d  # 20 + (150/5)
 print("a + (b * c) / d 运算结果为：", e)  # 看，电灯泡
 # =======================================================
-# !/usr/bin/python
-
 count = 0  # 设定函数值为0
 while count < 9:  # 在当函数值小于9的条件下循环输出以下内容
     print('The count is:', count)  # 输出，包含下一个变量
     count = count + 1  # 每一次循环都加1
-
-print("Good bye!")  # 不成熟的解释
-# =========================================
-# !/usr/bin/python
-# -*- coding: UTF-8 -*-
-
+# 改循环会将count一直加一，并且输出该数，直到count》=9，循环结束
+print("On my god!")  # 天才
 var = 1
-while var == 1:  # 该条件永远为true，循环将无限执行下去
+while var == 1:  # 该条件永远为true，循环将无限执行下去（死循环）
     num = input("随便 :")  # 随便写一个，回车
     print("写了个寂寞: ", num)  # 输出你刚刚写下的东西
     if num == '1314':  # 当你输入一生一世时，循环终止
         break
 print("拜拜!")  # 友好的再见
-# =======================================
-# !/usr/bin/python
-
 count = 0
 while count < 5:
-    print(count, " is  less than 5")
+    print(count, " 小于5")
     count = count + 1
 else:
-    print(count, " is not less than 5")
-# ==========================================
-# !/usr/bin/python
-
-
-import time
-
+    print(count, "不小于5")
+# 模块开头已给出
 keep_running = True
 start_time = time.time()
 
 while keep_running:
-    print('Given flag is really true!')
+    print('给定的标志确实为真！')
     # 5 秒后终止循环
     if time.time() - start_time > 5:
         keep_running = False
     time.sleep(0.1)  # 降低 CPU 占用
-
-print("Good bye!")
 # ===================================================
-# !/usr/bin/python
-# -*- coding: UTF-8 -*-
-
-for letter in '一个字，绝':  # 第一个实例
+for letter in '一个字，绝':  # 第一个实例，一个字一个字地输出
     print("看看看看: %s" % letter)
 
 fruits = ['唱', '跳', 'rap', '篮球']
-for fruit in fruits:  # 第二个实例
+for fruit in fruits:  # 第二个实例，一个元素一个元素地输出
     print('真的是你呀，哈哈！: %s' % fruit)
-
-print("baybay!")
-# ==================================================
-# !/usr/bin/python
-# -*- coding: UTF-8 -*-
 
 fruits = ['鸡', '你', '太美']
 for index in range(len(fruits)):
     print('真的是你呀！哈哈 ： %s' % fruits[index])
-
-print("beybey!")
 # ====================================================
-# !/usr/bin/python
-# -*- coding: UTF-8 -*-
-
 for num in range(10, 20):  # 迭代 10 到 20 (不包含) 之间的数字,简单来说就是10~19
     for i in range(2, num):  # 根据因子迭代
         if num % i == 0:  # 确定第一个因子
@@ -306,27 +521,25 @@ for num in range(10, 20):  # 迭代 10 到 20 (不包含) 之间的数字,简单
     else:  # 循环的 else 部分
         print('%d 是一个质数' % num)
 
-# !/usr/bin/python
-# -*- coding: UTF-8 -*-
-
+# ===============================================
 i = 2
 while i < 100:
     j = 2
     while j <= (i / j):
-        if not (i % j): break
-        j = j + 1
-    if j > i / j: print(i, " 是素数")
-    i = i + 1
-
-print("Good bye!")
+        if not (i % j):
+            break
+        j += 1
+    if j > i / j:
+        print(i, " 是素数")
+    i += 1
 # ==============================================
 apple = 'eat'  # 吃苹果
 kill = 'eat'  # 修正了这里，将 kill 的值改为 'eat'
-I = 'you'
+I1 = 'you'
 kiss = 'you'
 
 # 检查条件是否满足
-if apple == kill and I == kiss:
+if apple == kill and I1 == kiss:
     print(
         '''一袋米要抗几楼（感受痛苦吧），
 一袋米要抗二楼（思考痛苦吧），
@@ -338,14 +551,14 @@ if apple == kill and I == kiss:
 谁给你一袋米呦（让世界感受痛苦），
 行了添水 / 辛辣天森 / 心累天塞（神罗天征）！'''
     )
-elif apple == kill and I != kiss:
+elif apple == kill and I1 != kiss:
     print('一袋米引发的战争')
 '''试了三次啊，三次，终于成功了'''
 # ========================================================
 a = input("第一个数字：")
 b = input("第二个数字：")
 # print(type(a))  # 查看变量类型
-a = int(a)
+a = int(a)  # 将变量a 转换为整数类型
 b = int(b)
 # print(type(a))
 print(a + b)
@@ -382,18 +595,13 @@ while b <= 100:  # 用while循环100次，哈哈哈
     a -= b  # 还是徒劳吗？
     # break 用break直接结束循环
 # ====================================时间戳的运用示例
-import time
-
 # 获取当前时间戳（秒级时间戳）
 timestamp = time.time()
-print("当前时间戳（秒）:", timestamp)  # 时间戳的英文
+print("当前时间戳（秒）:", timestamp)
 
 # 获取当前时间戳（毫秒级时间戳）
 timestamp_ms = int(round(time.time() * 1000))
-print("当前时间戳（毫秒）:", timestamp_ms)  # 横杠加ms
-
-import time
-from datetime import datetime  # 运用了时间数据
+print("当前时间戳（毫秒）:", timestamp_ms)
 
 # 将秒级时间戳转换为日期时间
 timestamp = time.time()
@@ -401,11 +609,13 @@ dt = datetime.fromtimestamp(timestamp)
 print("从时间戳转换为日期时间:", dt)
 
 # 将毫秒级时间戳转换为日期时间
+
 timestamp_ms = 1672531200000  # 示例毫秒级时间戳
 dt_ms = datetime.fromtimestamp(timestamp_ms / 1000)
-print("从毫秒级时间戳转换为日期时间:", dt_ms)
-
-from datetime import datetime
+# 使用更精确的毫秒转换方法
+milliseconds = timestamp_ms % 1000
+dt_ms_precise = datetime.fromtimestamp(timestamp_ms // 1000) + timedelta(milliseconds=milliseconds)
+print("从毫秒级时间戳转换为日期时间:", dt_ms_precise)
 
 # 将日期时间转换为秒级时间戳
 dt = datetime.now()
@@ -416,51 +626,54 @@ print("从日期时间转换为时间戳（秒）:", timestamp)
 timestamp_ms = int(dt.timestamp() * 1000)
 print("从日期时间转换为时间戳（毫秒）:", timestamp_ms)
 
-import time
-from datetime import datetime
-
 # 获取当前时间戳并格式化为日期时间字符串
 timestamp = time.time()
 formatted_time = datetime.fromtimestamp(timestamp).strftime("%Y-%m-%d %H:%M:%S")
 print("格式化的时间:", formatted_time)
 
-from datetime import datetime
-
 # 计算两个时间戳之间的时间差
-timestamp1 = time.time()
-time.sleep(2)  # 模拟等待2秒
-timestamp2 = time.time()
+try:
+    timestamp1 = time.time()
+    time.sleep(2)  # 模拟等待2秒
+    timestamp2 = time.time()
 
-# 计算时间差（秒）
-time_diff = timestamp2 - timestamp1
-print("时间差（秒）:", time_diff)
-
-from datetime import datetime, timedelta
+    # 计算时间差（秒）
+    if timestamp2 >= timestamp1:
+        time_diff = timestamp2 - timestamp1
+        print("时间差（秒）:", time_diff)
+    else:
+        raise ValueError("时间戳2必须大于等于时间戳1")
+except Exception as e:
+    print(f"时间计算错误: {e}")
 
 # 创建一个日期时间对象
-dt = datetime.now()  #现在
+dt = datetime.now()
 print("当前日期时间:", dt)
 
-# 添加时间
-new_dt = dt + timedelta(days=1, hours=2, minutes=30)
-print("添加时间后:", new_dt)
+# 日期时间加减操作前增加边界检查
+if isinstance(dt, datetime):
+    # 添加时间
+    new_dt = dt + timedelta(days=1, hours=2, minutes=30)
+    print("添加时间后:", new_dt)
 
-# 减去时间
-old_dt = dt - timedelta(days=1)
-print("减去时间后:", old_dt)
-
-from datetime import datetime
+    # 减去时间
+    old_dt = dt - timedelta(days=1)
+    print("减去时间后:", old_dt)
+else:
+    print("错误：无效的日期时间对象")
 
 # 定义两个日期时间
 start_time = datetime(2024, 1, 1)
 end_time = datetime(2024, 1, 15)
 
-# 计算时间戳差
-time_diff = (end_time - start_time).total_seconds()
-print("两个日期之间的时间戳差（秒）:", time_diff)
+# 两个日期之间的时间戳差值计算时增加有效性检查
+if end_time > start_time:
+    time_diff = (end_time - start_time).total_seconds()
+    print("两个日期之间的时间戳差（秒）:", time_diff)
+else:
+    print("错误：结束时间必须大于开始时间")
 # ========================================================时间控制循环示例（好玩）
 # 使用 time.time() 来控制循环时间
-import time
 
 # 设置循环的最大运行时间（秒）
 max_duration = 5  # 例如，让循环运行 5 秒
@@ -479,7 +692,6 @@ while True:
     time.sleep(1)  # 模拟每次循环耗时 1 秒
 
 # 使用 datetime.timedelta 来控制循环时间
-from datetime import datetime, timedelta
 
 # 设置循环的最大运行时间（秒）
 max_duration = 5  # 例如，让循环运行 5 秒
@@ -497,42 +709,38 @@ while True:
     print("我是datetime.timedelta")
     time.sleep(1)  # 模拟每次循环耗时 1 秒
 
-# # 使用 signal 模块（仅限 Unix 系统）
-# import signal
-# import time
-#
-# # 定义一个标志变量，用于控制循环
-# stop_loop = False
-#
-# # 定义信号处理函数
-# def handle_timeout(signum, frame):
-#     global stop_loop
-#     print("时间限制已到，停止循环。")
-#     stop_loop = True
-#
-# # 设置信号处理
-# signal.signal(signal.SIGALRM, handle_timeout)
-# signal.alarm(5)  # 设置 5 秒后发送 SIGALRM 信号
-#
-# try:
-#     while not stop_loop:
-#         print("循环正在运行...")
-#         time.sleep(1)  # 模拟每次循环耗时 1 秒
-# finally:
-#     signal.alarm(0)  # 取消定时信号
-
-# 使用多线程
-import threading
+'''# 使用 signal 模块（仅限 Unix 系统）
+import signal
 import time
 
 # 定义一个标志变量，用于控制循环
 stop_loop = False
 
-
-# 定义一个函数来控制循环时间
-def stop_after_timeout(timeout):
+# 定义信号处理函数
+def handle_timeout(signum, frame):
     global stop_loop
-    time.sleep(timeout)
+    print("时间限制已到，停止循环。")
+    stop_loop = True
+
+# 设置信号处理
+signal.signal(signal.SIGALRM, handle_timeout)
+signal.alarm(5)  # 设置 5 秒后发送 SIGALRM 信号
+
+try:
+    while not stop_loop:
+        print("循环正在运行...")
+        time.sleep(1)  # 模拟每次循环耗时 1 秒
+finally:
+    signal.alarm(0)  # 取消定时信号'''
+
+# 使用多线程
+# 定义一个标志变量，用于控制循环
+stop_loop = False
+
+
+def stop_after_timeout(duration):
+    global stop_loop
+    time.sleep(duration)
     stop_loop = True
     print("时间限制已到，停止循环。")
 
@@ -551,8 +759,8 @@ while not stop_loop:
 
 thread.join()  # 等待线程结束
 
+
 # 使用 asyncio（异步方式）
-import asyncio
 
 
 async def main():
@@ -599,7 +807,7 @@ if x > 5:
     pass  # 跳过，下次想好了再补充
 print("吹牛逼呢，见过吗，这叫俄罗斯大贝塔，你就只能看着我骑")
 # ============================================================
-import time  # 使用标志变量 + 时间戳（无需多线程）
+# 使用标志变量 + 时间戳（无需多线程）
 
 start_time = time.time()
 timeout = 5  # 5秒后停止
@@ -614,8 +822,8 @@ while True:
         print("已超时，停止循环")
         break
 
-import time  # 使用多线程 + 定时器（精确控制）
-import threading
+# 使用多线程 + 定时器（精确控制）
+
 
 # 控制循环运行的标志
 running = True
@@ -697,7 +905,6 @@ print(bool(s))"""
 
 # ===============================================================
 # 蛊界的那些事
-import time
 
 # 定义对话内容的字典
 dialogues = {
@@ -812,7 +1019,7 @@ if dialogues["fang_yuan_crying"]["condition"] == "哭泣":
 
 if (dialogues["blood_skull_gu"]["condition"], dialogues["fang_yuan_crying"]["condition"]) == \
         dialogues["combined_dialogue"]["condition"]:
-    print_with_delay(dialogues["combined_dialogue"]["content"], delay=0.5)
+    print_with_delay(dialogues["combined_dialogue"]["content"], delay=1)
 
 if dialogues["gu_zhen_ren"]["condition"] == "方源诵诗":
     print_with_delay(dialogues["gu_zhen_ren"]["content"])
@@ -826,15 +1033,14 @@ if dialogues["fang_yuan_history"]["condition"] == "历史，如果有用还要�
 print_with_delay(dialogues["bai_ning_bing"]["content"])
 print_with_delay(dialogues["girl_toy_scene"]["content"])
 # ==============================================================
-import turtle
 
 # 设置屏幕
-screen = turtle.Screen()  # screen是变量
+screen = Screen()  # screen是变量
 screen.setup(600, 400)  # 设置屏幕大小
 screen.bgcolor("red")  # 设置背景颜色
 
 # 创建画笔
-pen = turtle.Turtle()  # pen是变量
+pen = Turtle()  # pen是变量
 pen.speed(10)  # 设置画笔速度为10
 pen.penup()  # 设置画笔抬起
 
@@ -882,191 +1088,182 @@ draw_small_star(-100, 20, 30, -60)  # 调用函数draw_small_star
 pen.hideturtle()
 
 # 结束
-turtle.done()  # 阻塞程序并保持窗口打开，直到用户手动关闭
-# turtle.mainloop()
+done()  # 阻塞程序并保持窗口打开，直到用户手动关闭
+# mainloop()
 # ===============================================================
-# from turtle import*#可以不用导入，直接用turtle
-import turtle
-import turtle as t
-import time as ti
-
-'''t.speed(0)    # 设置最快速度
-t.tracer(0)   # 关闭自动刷新
+'''speed(0)    # 设置最快速度
+tracer(0)   # 关闭自动刷新
 # ==================================
 # 四个圆
 a = 1
 while a <= 4:
-    t.circle(100)
-    t.right(90)
+    circle(100)
+    right(90)
     a += 1
 
-t.update()     # 最终刷新画面
-ti.sleep(5)    # 保持窗口显示（可选）
+update()     # 最终刷新画面
+time.sleep(5)    # 保持窗口显示（可选）
 
-# t.circle(100)
-# t.left(180)
+# circle(100)
+# left(180)
 # ===================================
 # 球
 for i in range(100):
-    t.circle(100)
-    t.right(91)
-t.done()
+    circle(100)
+    right(91)
+done()
 # ===================================
 # 四方相回
 for i in range(100):
-    t.circle(i)
-    t.right(91)
-t.done()
+    circle(i)
+    right(91)
+done()
 # ==================================
 # 彩色的圆
 for i in range(100):
-    t.circle(i)
-    t.right(91)
-    t.color("red")
-    t.color("blue")
-    t.color("green")
-    t.color("yellow")
-    t.color("pink")
-    t.color("purple")
-    t.color("orange")
-    t.color("black")
-    t.color("white")
-t.done()
+    circle(i)
+    right(91)
+    color("red")
+    color("blue")
+    color("green")
+    color("yellow")
+    color("pink")
+    color("purple")
+    color("orange")
+    color("black")
+    color("white")
+done()
 # ==================================
 # 不好看
-import turtle as t
 
 # 颜色配置优化方案
 colors = ["red", "orange", "yellow", "green", "blue", "purple", "pink"]
-t.speed(0)  # 设置最快绘制速度
+speed(0)  # 设置最快绘制速度
 
 for i in range(100):
       # 通过取余实现颜色循环
-    t.color(colors[i % len(colors)])
-    t.circle(i)
-    t.right(91)
+    color(colors[i % len(colors)])
+    circle(i)
+    right(91)
 
-t.done()
+done()
 # ==================================
 # 好看吗？
-import turtle as t
-import random
 
 # 方式1：使用随机RGB颜色（更丰富的色彩）
-t.colormode(255)  # 必须设置颜色模式
-t.speed(0)
+colormode(255)  # 必须设置颜色模式
+speed(0)
 
 for i in range(100):
       # 生成随机RGB颜色
     r = random.randint(0, 255)
     g = random.randint(0, 255)
     b = random.randint(0, 255)
-    t.color((r, g, b))
+    color((r, g, b))
 
-    t.circle(i)
-    t.right(91)
+    circle(i)
+    right(91)
 
-t.done()
+done()
 # ==================================
 # 蓝球
-t.color('blue')
+color('blue')
 for i in range(100):
-    t.circle(i)
-    t.right(78)
+    circle(i)
+    right(78)
 # ==================================
 # 奥运五环
-t.pensize(9)
+pensize(9)
 
-t.color('black')
-t.circle(75)
+color('black')
+circle(75)
 
-t.penup()
-t.goto(-180,0)
-t.pendown()
-t.color('blue')
-t.circle(75)
+penup()
+goto(-180,0)
+pendown()
+color('blue')
+circle(75)
 
-t.penup()
-t.goto(180,0)
-t.pendown()
-t.color('red')
-t.circle(75)
+penup()
+goto(180,0)
+pendown()
+color('red')
+circle(75)
 
-t.penup()
-t.goto(90,-75)
-t.pendown()
-t.color('green')
-t.circle(75)
+penup()
+goto(90,-75)
+pendown()
+color('green')
+circle(75)
 
-t.penup()
-t.goto(-90,-75)
-t.pendown()
-t.color('yellow')
-t.circle(75)
+penup()
+goto(-90,-75)
+pendown()
+color('yellow')
+circle(75)
 
-t.color('black')
-t.penup()
-t.goto(-100,180)
-t.pendown()
-t.write('北京 2020',font=('kaiti',32))
-t.hideturtle()
+color('black')
+penup()
+goto(-100,180)
+pendown()
+write('北京 2020',font=('Haiti',32))
+hideturtle()
 # ==================================
 # 美国盾牌
-t.penup()
-t.goto(0,-200)
-t.pendown()
-t.color('red')
-t.begin_fill()
-t.circle(200)
-t.end_fill()
+penup()
+goto(0,-200)
+pendown()
+color('red')
+begin_fill()
+circle(200)
+end_fill()
 
-t.penup()
-t.goto(0,-150)
-t.pendown()
-t.color('white')
-t.begin_fill()
-t.circle(150)
-t.end_fill()
+penup()
+goto(0,-150)
+pendown()
+color('white')
+begin_fill()
+circle(150)
+end_fill()
 
-t.penup()
-t.goto(0,-100)
-t.pendown()
-t.color('red')
-t.begin_fill()
-t.circle(100)
-t.end_fill()
+penup()
+goto(0,-100)
+pendown()
+color('red')
+begin_fill()
+circle(100)
+end_fill()
 
-t.penup()
-t.goto(0,-50)
-t.pendown()
-t.color('blue')
-t.begin_fill()
-t.circle(50)
-t.end_fill()
+penup()
+goto(0,-50)
+pendown()
+color('blue')
+begin_fill()
+circle(50)
+end_fill()
 
-t.penup()
-t.goto(-40,10)
-t.pendown()
+penup()
+goto(-40,10)
+pendown()
 
-t.color('white')
+color('white')
 
-t.begin_fill()
+begin_fill()
 
 for i in range(5):
-    t.forward(80)
-    t.right(144)
+    forward(80)
+    right(144)
 
-t.end_fill()
+end_fill()
 
-t.hideturtle()
+hideturtle()
 # =================================
 # 彩球飘飘
 
 # 随机数
-import random
 
-t.colormode(255)
-t.speed(0)
+colormode(255)
+speed(0)
 
 for i in range(20):
     red = random.randint(0,255)  # 在这里调颜色
@@ -1076,63 +1273,62 @@ for i in range(20):
     x = random.randint(-220,220)
     y = random.randint(-100,220)
 
-    t.penup()
-    t.goto(x,y)
-    t.pendown()
+    penup()
+    goto(x,y)
+    pendown()
 
-    t.color(red,green,blue)
+    color(red,green,blue)
 
-    t.begin_fill()
-    t.circle(30)
-    t.end_fill()
+    begin_fill()
+    circle(30)
+    end_fill()
 
-    t.right(90)
-    t.forward(30)
-    t.left(90)
-t.done()
+    right(90)
+    forward(30)
+    left(90)
+done()
 # RGB red green blue
 # ==================================
 # 繁星满天
-import random
-t.bgcolor('black')
+color('black')
 
-t.speed(0)
-t.colormode(255)
+speed(0)
+colormode(255)
 
-t.pensize(250)
+pensize(250)
 for i in range(10):
-    t.goto(-500,300-i*100)
-    t.color(i*20,i*20,i*20)
-    t.forward(1000)
+    goto(-500,300-i*100)
+    color(i*20,i*20,i*20)
+    forward(1000)
 
 for x in range(8):
     if x%2==0:
-        t.left(30)
+        left(30)
     else:
-        t.right(120)
-    t.forward(50)
+        right(120)
+    forward(50)
 for i in range(20):
     x = random.randint(-400,400)
     y = random.randint(-100,350)
     e = random.randint(1, 15)
     def drawStar():
-        t.begin_fill()
+        begin_fill()
         for i in range(4):
-            t.forward(e)
-            t.left(30)
-            t.forward(e)
-            t.right(120)
-        t.end_fill()
+            forward(e)
+            left(30)
+            forward(e)
+            right(120)
+        end_fill()
 
-    t.pensize(5)
-    t.penup()
-    t.goto(x, y)
-    # t.goto(150,150)
-    t.pendown()
+    pensize(5)
+    penup()
+    goto(x, y)
+    # goto(150,150)
+    pendown()
     red = random.randint(180,255)
     green = random.randint(180,255)
     blue = 0
-    t.color(red, green, blue)
+    color(red, green, blue)
     drawStar()'''
 # ===================================
 mc = int(input('请输入排名：'))  # 输入排名进行加分
@@ -1144,9 +1340,6 @@ else:
     print('输入错误，不在1~6内！')
 # ====================================
 # 小游戏，随机数模拟色子
-import random
-import time
-
 money = 10000000
 number_of_times = 0
 game_player = 0
@@ -1199,10 +1392,7 @@ while True:
         dealer = 0
     else:
         break
-
 # ====================================
-import random
-
 counters = [0] * 6
 # 模拟掷色子记录每种点数出现的次数
 for _ in range(6000):
@@ -1398,18 +1588,8 @@ for face in range(1, 7):
 
 """
 
-
-
-
-
-
-
 # ===================================
 # 不计分
-import pygame
-import math
-import random
-from pygame.math import Vector2
 
 # 窗口配置
 SCREEN_WIDTH = 1500
@@ -1421,7 +1601,7 @@ PLAYER_BOOST_MULTIPLIER = 1.8  # 加速倍率
 BALL_RADIUS = 20
 BOUNCE_STRENGTH = 0.85
 COLLISION_FORCE = 28
-BLUE_ACC = 0.99  # 蓝球加速度调整
+BLUE_ACC = 0.99  # 篮球加速度调整
 BLUE_SPEED_CAP = 25  # 保持原最大速度
 BOOST_TIME_THRESHOLD = 27  # 60帧=1秒
 
@@ -1554,7 +1734,7 @@ while True:
         ),
     )
 
-    # 更新蓝球
+    # 更新篮球
     update_blue_ai()
     blue_pos += blue_vel
     blue_pos, blue_vel = handle_boundary(blue_pos, blue_vel, BALL_RADIUS)
@@ -1585,226 +1765,3 @@ while True:
     pygame.draw.circle(screen, "yellow", yellow_pos, BALL_RADIUS)
     pygame.display.flip()
     clock.tick(60)
-# =======================================================================================================================
-# 计分
-import pygame
-import math
-import random
-from pygame.math import Vector2
-
-# 窗口配置
-SCREEN_WIDTH = 1500
-SCREEN_HEIGHT = 900
-
-# 游戏参数
-游戏时长 = 60  # 单位：秒
-玩家基础速度 = 20
-加速倍率 = 1.8
-小球半径 = 20
-反弹系数 = 0.85
-碰撞力度 = 28
-蓝球加速度 = 0.99
-蓝球最大速度 = 25
-加速时间阈值 = 27  # 0.45秒
-
-pygame.init()
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-clock = pygame.time.Clock()
-# 使用中文字体（确保系统有SimHei字体）
-font = pygame.font.SysFont("SimHei", 36)
-大字体 = pygame.font.SysFont("SimHei", 72, bold=True)
-
-# 游戏状态
-游戏进行中 = False
-开始时间 = 0
-分数 = 0
-
-# 游戏对象
-玩家 = pygame.Rect(750, 750, 50, 50)
-蓝球位置 = Vector2(750, 750)
-蓝球速度 = Vector2()
-黄球位置 = Vector2(SCREEN_WIDTH // 2, 200)
-黄球速度 = Vector2(3, 0)
-
-# 按键计时
-按键计时器 = {pygame.K_UP: 0, pygame.K_DOWN: 0, pygame.K_LEFT: 0, pygame.K_RIGHT: 0}
-
-
-def 重置游戏():
-    global 玩家, 蓝球位置, 蓝球速度, 黄球位置, 黄球速度, 分数, 开始时间, 游戏进行中
-    玩家 = pygame.Rect(750, 750, 50, 50)
-    蓝球位置 = Vector2(750, 750)
-    随机角度 = math.radians(random.uniform(0, 360))
-    蓝球速度 = Vector2(15 * math.cos(随机角度), 15 * math.sin(随机角度))
-    黄球位置 = Vector2(SCREEN_WIDTH // 2, 200)
-    黄球速度 = Vector2(3, 0)
-    分数 = 0
-    开始时间 = pygame.time.get_ticks()
-    游戏进行中 = True
-
-
-def 检测碰撞(矩形, 圆形位置, 半径):
-    最近x = max(矩形.left, min(圆形位置.x, 矩形.right))
-    最近y = max(矩形.top, min(圆形位置.y, 矩形.bottom))
-    dx = 圆形位置.x - 最近x
-    dy = 圆形位置.y - 最近y
-    return dx ** 2 + dy ** 2 < 半径 ** 2
-
-
-def 小球碰撞检测(位置1, 位置2, 半径):
-    return 位置1.distance_to(位置2) < 半径 * 2
-
-
-def 处理边界(位置, 速度, 半径):
-    if 位置.x < 半径:
-        位置.x = 半径
-        速度.x = abs(速度.x) * 反弹系数
-    elif 位置.x > SCREEN_WIDTH - 半径:
-        位置.x = SCREEN_WIDTH - 半径
-        速度.x = -abs(速度.x) * 反弹系数
-
-    if 位置.y < 半径:
-        位置.y = 半径
-        速度.y = abs(速度.y) * 反弹系数
-    elif 位置.y > SCREEN_HEIGHT - 半径:
-        位置.y = SCREEN_HEIGHT - 半径
-        速度.y = -abs(速度.y) * 反弹系数 * 1.2
-    return 位置, 速度
-
-
-def 更新蓝球AI():
-    global 蓝球速度
-    目标方向 = (黄球位置 - 蓝球位置).normalize()
-    蓝球速度 += 目标方向 * 蓝球加速度
-
-    if 蓝球速度.magnitude() > 蓝球最大速度:
-        蓝球速度 = 蓝球速度.normalize() * 蓝球最大速度
-    蓝球速度 *= 0.99
-
-
-def 更新黄球AI():
-    global 黄球速度
-    逃生方向 = (黄球位置 - 玩家.center).normalize() + (黄球位置 - 蓝球位置).normalize()
-    逃生方向 = 逃生方向.normalize()
-
-    if 黄球位置.x < 150 or 黄球位置.x > SCREEN_WIDTH - 150:
-        逃生方向.y += 0.8 * (-1 if 黄球位置.y < SCREEN_HEIGHT / 2 else 1)
-    if 黄球位置.y < 150 or 黄球位置.y > SCREEN_HEIGHT - 150:
-        逃生方向.x += 0.8 * (-1 if 黄球位置.x < SCREEN_WIDTH / 2 else 1)
-
-    黄球速度 += 逃生方向 * 0.035
-    if 黄球速度.magnitude() > 35:
-        黄球速度 = 黄球速度.normalize() * 35
-
-
-def 绘制界面():
-    if 游戏进行中:
-        剩余时间 = 游戏时长 - (pygame.time.get_ticks() - 开始时间) // 1000
-        分数文本 = font.render(f"分数: {分数:.1f}", True, "white")
-        时间文本 = font.render(f"剩余时间: {剩余时间}秒", True, "white")
-        screen.blit(分数文本, (10, 10))
-        screen.blit(时间文本, (10, 50))
-    else:
-        screen.fill("black")
-        最终分数文本 = 大字体.render(f"最终得分: {分数:.1f}", True, "yellow")
-        提示文本 = font.render("按回车键重新开始", True, "white")
-        screen.blit(
-            最终分数文本,
-            (
-                SCREEN_WIDTH // 2 - 最终分数文本.get_width() // 2,
-                SCREEN_HEIGHT // 2 - 50,
-            ),
-        )
-        screen.blit(
-            提示文本,
-            (SCREEN_WIDTH // 2 - 提示文本.get_width() // 2, SCREEN_HEIGHT // 2 + 50),
-        )
-
-
-运行中 = True
-while 运行中:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            运行中 = False
-        elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_q:
-                运行中 = False
-            elif event.key == pygame.K_RETURN and not 游戏进行中:
-                重置游戏()
-
-    if 游戏进行中:
-        # 更新按键计时
-        按键 = pygame.key.get_pressed()
-        for 键 in [pygame.K_UP, pygame.K_DOWN, pygame.K_LEFT, pygame.K_RIGHT]:
-            按键计时器[键] = 按键计时器[键] + 1 if 按键[键] else 0
-
-        # 玩家移动
-        y速度 = 玩家基础速度
-        x速度 = 玩家基础速度
-
-        if 按键[pygame.K_UP] and 按键计时器[pygame.K_UP] > 加速时间阈值:
-            y速度 *= 加速倍率
-        if 按键[pygame.K_DOWN] and 按键计时器[pygame.K_DOWN] > 加速时间阈值:
-            y速度 *= 加速倍率
-
-        if 按键[pygame.K_LEFT] and 按键计时器[pygame.K_LEFT] > 加速时间阈值:
-            x速度 *= 加速倍率
-        if 按键[pygame.K_RIGHT] and 按键计时器[pygame.K_RIGHT] > 加速时间阈值:
-            x速度 *= 加速倍率
-
-        玩家.y = max(
-            0,
-            min(
-                SCREEN_HEIGHT - 50,
-                玩家.y - 按键[pygame.K_UP] * y速度 + 按键[pygame.K_DOWN] * y速度,
-            ),
-        )
-        玩家.x = max(
-            0,
-            min(
-                SCREEN_WIDTH - 50,
-                玩家.x - 按键[pygame.K_LEFT] * x速度 + 按键[pygame.K_RIGHT] * x速度,
-            ),
-        )
-
-        # 更新蓝球
-        更新蓝球AI()
-        蓝球位置 += 蓝球速度
-        蓝球位置, 蓝球速度 = 处理边界(蓝球位置, 蓝球速度, 小球半径)
-
-        # 更新黄球
-        更新黄球AI()
-        黄球位置 += 黄球速度
-        黄球位置, 黄球速度 = 处理边界(黄球位置, 黄球速度, 小球半径)
-
-        # 碰撞处理
-        if 小球碰撞检测(蓝球位置, 黄球位置, 小球半径):
-            碰撞方向 = (黄球位置 - 蓝球位置).normalize()
-            蓝球速度 = -碰撞方向 * 碰撞力度 * 0.7
-            黄球速度 = 碰撞方向 * 碰撞力度 * 1.4
-            分数 += 0.5
-
-        if 检测碰撞(玩家, 黄球位置, 小球半径):
-            方向 = (黄球位置 - 玩家.center).normalize()
-            黄球速度 = 方向 * 碰撞力度 * 1.2
-            分数 += 1
-
-        if 检测碰撞(玩家, 蓝球位置, 小球半径):
-            方向 = (蓝球位置 - 玩家.center).normalize()
-            蓝球速度 = 方向 * 碰撞力度 * 0.8
-
-        # 检查时间
-        if (pygame.time.get_ticks() - 开始时间) // 1000 >= 游戏时长:
-            游戏进行中 = False
-
-    # 渲染
-    screen.fill("black")
-    if 游戏进行中:
-        pygame.draw.rect(screen, "red", 玩家)
-        pygame.draw.circle(screen, "blue", 蓝球位置, 小球半径)
-        pygame.draw.circle(screen, "yellow", 黄球位置, 小球半径)
-    绘制界面()
-    pygame.display.flip()
-    clock.tick(60)
-
-pygame.quit()
