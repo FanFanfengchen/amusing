@@ -1,19 +1,32 @@
 import time
 
-print("闭上眼睛，在心底进行观想")
-time.sleep(2)
+
+def print_speak(speak):
+    for i in speak:
+        print(i, flush=True, end='')
+        time.sleep(0.27)
+
+
+speak_1 = "闭上眼睛，在心底进行观想"
+print_speak(speak_1)
+# time.sleep(2)
 
 task_completed = False  # 标志变量，用于控制任务是否完成
 
 while not task_completed:  # 外层循环，用于整个程序的重来机制
-    print("想象你的手中的一个硬币：")
-    a = input()  # 接收用户输入
+    speak_2 = "\n想象你的手中的一个硬币："
+    print_speak(speak_2)
+    a = input('\n')  # 接收用户输入
     if a == "抛掷":  # 使用比较运算符比较输入内容
-        print("你抛掷了一枚硬币")
-        time.sleep(2)
-        print("这枚硬币反向落入水中")
-        time.sleep(1)
-        print("产生涟漪")
+        time.sleep(0.8)
+        speak_3 = "你抛掷了一枚硬币"
+        print_speak(speak_3)
+        time.sleep(1.6)
+        speak_4 = "\n这枚硬币反向落入水中"
+        print_speak(speak_4)
+        time.sleep(0.75)
+        speak_5 = "\n产生涟漪"
+        print_speak(speak_5)
         time.sleep(1.25)
         print("共振")
         time.sleep(1)
