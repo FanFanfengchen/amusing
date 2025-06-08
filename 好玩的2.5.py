@@ -5,7 +5,7 @@ def print_speak(speak):
     for i in speak:
         print(i, flush=True, end='')
         time.sleep(0.27)
-
+    print('')
 
 speak_1 = "闭上眼睛，在心底进行观想"
 print_speak(speak_1)
