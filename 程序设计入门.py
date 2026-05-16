@@ -78,19 +78,18 @@ print("属", sheng_xiao[sx])  # 字符串格式化的一种
 # ·题目描述，输入身份证号码，输出出生年月、年龄和生肖
 # ·题目描述：求6位同学成绩的最高分、最低分、平均分
 # ·键盘输入6位同学成绩，输出最高分、最低分、平均分
-cj = []  # 成绩列表初始为空
-v = eval(input("请输入第1位同学的成绩："))  # 输入学生成绩
-cj.append(v)  # 将成绩添加到cj列表中
-v = eval(input("请输入第2位同学的成绩："))
-cj.append(v)
-v = eval(input("请输入第3位同学的成绩："))
-cj.append(v)
-v = eval(input("请输入第4位同学的成绩："))
-cj.append(v)
-v = eval(input("请输入第5位同学的成绩："))
-cj.append(v)
-v = eval(input("请输入第6位同学的成绩："))
-cj.append(v)
+cj = []
+for i in range(1, 7):
+    while True:
+        try:
+            v = float(input(f"请输入第{i}位同学的成绩："))
+            if 0 <= v <= 100:
+                cj.append(v)
+                break
+            else:
+                print("成绩应在0-100之间，请重新输入")
+        except ValueError:
+            print("请输入有效的数字")
 print("6位同学成绩为：", cj)
 print("最高分：", max(cj))  # max()求列表最大值
 print("最低分：", min(cj))  # min()求列表最小值
@@ -100,33 +99,45 @@ print("平均分：", avg)
 import os
 import requests
 
-# import json
-
 url = 'https://pvp.qq.com/web201605/js/herolist.json'
-herolist = requests.get(url)  # 获取英雄列表json文件
-herolist_json = herolist.json()  # 转化为json格式
-hero_name = list(map(lambda x: x['cname'], herolist.json()))
-# 提取英雄的名字
-hero_number = list(map(lambda x: x['ename'], herolist.json()))  # 提取英雄的编号
+
+try:
+    herolist = requests.get(url, timeout=10)
+    herolist.raise_for_status()
+    herolist_json = herolist.json()
+    hero_name = list(map(lambda x: x['cname'], herolist_json))
+    hero_number = list(map(lambda x: x['ename'], herolist_json))
+except requests.RequestException as e:
+    print(f"网络请求失败: {e}")
+    hero_name = []
+    hero_number = []
+except (KeyError, ValueError) as e:
+    print(f"数据解析失败: {e}")
+    hero_name = []
+    hero_number = []
 
 
-# 定义下载图片的函数方法
 def downloadPic():
-    i = 0
-    for j in hero_number:
-        # 创建文件夹
-        os.mkdir(r"D:\软件\pycharm\英雄\\" + hero_name[i])
-        # 进入创建好的文件夹
-        os.chdir(r"D:\软件\pycharm\英雄\\" + hero_name[i])
-        i += 1
-        for k in range(10):  # 拼接url
-            onehero_link = 'http://game.gtimg.cn/images/yxzj/img201606/skin/hero-info/' + str(j) + '/' + str(
-                j) + '-bigskin' + str(k) + '.jpg'
-            im = requests.get(onehero_link)  # 请求url
-            if im.status_code == 200:
-                open(str(k) + '.jpg', 'wb').write(im.content)
+    if not hero_name:
+        print("没有可下载的英雄数据")
+        return
+    
+    save_dir = os.path.join(os.path.dirname(__file__), "英雄")
+    os.makedirs(save_dir, exist_ok=True)
+    
+    for i, j in enumerate(hero_number):
+        hero_dir = os.path.join(save_dir, hero_name[i])
+        os.makedirs(hero_dir, exist_ok=True)
+        
+        for k in range(10):
+            onehero_link = f'http://game.gtimg.cn/images/yxzj/img201606/skin/hero-info/{j}/{j}-bigskin{k}.jpg'
+            try:
+                im = requests.get(onehero_link, timeout=10)
+                if im.status_code == 200:
+                    with open(os.path.join(hero_dir, f'{k}.jpg'), 'wb') as f:
+                        f.write(im.content)
+            except requests.RequestException:
+                pass
 
 
-# 写入文件
 downloadPic()
-# 完结散花
