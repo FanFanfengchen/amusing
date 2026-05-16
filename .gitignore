@@ -19,6 +19,3 @@ bin-release/
 
 # Game save files
 highscore.json
-
-# Git ignore file itself
-.gitignore
